@@ -27,12 +27,24 @@ ax.set_xlabel("Loan Status")
 ax.set_ylabel("Count")
 st.pyplot(fig)  # Embed the plot in the Streamlit app
 
-plt.figure(1)
-plt.subplot(221)
-train['Gender'].value_counts(normalize=True).plot.bar(figsize=(20,10), title= 'Gender')
-plt.subplot(222)
-train['Married'].value_counts(normalize=True).plot.bar(title= 'Married')
-plt.subplot(223)
-train['Self_Employed'].value_counts(normalize=True).plot.bar(title= 'Self Employed')
-plt.subplot(224)
-train['Credit_History'].value_counts(normalize=True).plot.bar(title= 'Credit_History')
+# Plot multiple subplots
+st.write("### Additional Distributions")
+fig, axes = plt.subplots(2, 2, figsize=(20, 10))
+
+# Gender distribution
+train['Gender'].value_counts(normalize=True).plot.bar(ax=axes[0, 0], title="Gender")
+
+# Married distribution
+train['Married'].value_counts(normalize=True).plot.bar(ax=axes[0, 1], title="Married")
+
+# Self_Employed distribution
+train['Self_Employed'].value_counts(normalize=True).plot.bar(ax=axes[1, 0], title="Self Employed")
+
+# Credit_History distribution
+train['Credit_History'].value_counts(normalize=True).plot.bar(ax=axes[1, 1], title="Credit History")
+
+# Adjust layout to prevent overlap
+plt.tight_layout()
+
+# Display the figure in Streamlit
+st.pyplot(fig)
