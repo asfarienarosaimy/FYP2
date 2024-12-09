@@ -14,12 +14,15 @@ st.write(train.head(3))
 
 st.write(test.head(3))
 
-train.info()
-
+# Display the count of Loan_Status values
+st.write("### Loan Status Value Counts")
 st.write(train['Loan_Status'].value_counts())
 
-plt.figure(figsize=(10, 6))  # Set the figure size
-train['Loan_Status'].value_counts().plot.bar(title='Loan Status')
-plt.xlabel("Loan Status")  # Add x-axis label
-plt.ylabel("Count")        # Add y-axis label
-plt.show()                 # Display the plot
+# Plot Loan_Status value counts as a bar chart
+st.write("### Loan Status Distribution")
+fig, ax = plt.subplots(figsize=(10, 6))
+train['Loan_Status'].value_counts().plot.bar(ax=ax)
+ax.set_title("Loan Status")
+ax.set_xlabel("Loan Status")
+ax.set_ylabel("Count")
+st.pyplot(fig)  # Embed the plot in the Streamlit app
