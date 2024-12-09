@@ -97,3 +97,20 @@ plt.suptitle("")  # Remove the automatic "Boxplot grouped by Education" title
 
 # Display the figure in Streamlit
 st.pyplot(fig)
+
+# Plot Married vs Loan_Status as a stacked bar plot
+st.write("### Married vs Loan Status")
+fig, ax = plt.subplots(figsize=(6, 4))
+
+# Create a crosstab and normalize it
+Married = pd.crosstab(train['Married'], train['Loan_Status'])
+Married.div(Married.sum(1).astype(float), axis=0).plot(kind='bar', stacked=True, ax=ax)
+
+# Add labels and legend
+ax.set_title("Married vs Loan Status")
+ax.set_xlabel("Marital Status")
+ax.set_ylabel("Proportion")
+ax.legend(loc='best')
+
+# Display the figure in Streamlit
+st.pyplot(fig)
