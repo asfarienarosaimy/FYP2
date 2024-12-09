@@ -17,3 +17,5 @@ st.write(test.head(3))
 train.info()
 
 st.write(train['Loan_Status'].value_counts())
+
+train['Loan_Status'].value_counts().plot.bar(figsize=(10,6), title='Loan Status')
