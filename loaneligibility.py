@@ -13,3 +13,5 @@ test_original = test.copy()
 st.write(train.head(3))
 
 st.write(test.head(3))
+
+train.info()
