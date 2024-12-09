@@ -48,3 +48,11 @@ plt.tight_layout()
 
 # Display the figure in Streamlit
 st.pyplot(fig)
+
+plt.figure(1)
+plt.subplot(131)
+train['Dependents'].value_counts(normalize=True).plot.bar(figsize=(24,6), title='Dependents')
+plt.subplot(132)
+train['Education'].value_counts(normalize=True).plot.bar(title='Education')
+plt.subplot(133)
+train['Property_Area'].value_counts(normalize=True).plot.bar(title='Property Area')
