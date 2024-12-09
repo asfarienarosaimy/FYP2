@@ -18,4 +18,8 @@ train.info()
 
 st.write(train['Loan_Status'].value_counts())
 
-st.write(train['Loan_Status'].value_counts().plot.bar(figsize=(10,6), title='Loan Status'))
+plt.figure(figsize=(10, 6))  # Set the figure size
+train['Loan_Status'].value_counts().plot.bar(title='Loan Status')
+plt.xlabel("Loan Status")  # Add x-axis label
+plt.ylabel("Count")        # Add y-axis label
+plt.show()                 # Display the plot
