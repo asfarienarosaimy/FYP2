@@ -11,3 +11,11 @@ train_original = train.copy()
 test_original = test.copy()
 
 st.write(train.head(3))
+
+train.info()
+
+test.info()
+
+train['Loan_Status'].value_counts()
+
+train['Loan_Status'].value_counts().plot.bar(figsize=(10,6), title='Loan Status')
