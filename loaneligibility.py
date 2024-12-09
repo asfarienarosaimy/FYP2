@@ -16,4 +16,4 @@ st.write(test.head(3))
 
 train.info()
 
-train['Loan_Status'].value_counts()
+st.write(train['Loan_Status'].value_counts())
