@@ -26,3 +26,13 @@ ax.set_title("Loan Status")
 ax.set_xlabel("Loan Status")
 ax.set_ylabel("Count")
 st.pyplot(fig)  # Embed the plot in the Streamlit app
+
+plt.figure(1)
+plt.subplot(221)
+train['Gender'].value_counts(normalize=True).plot.bar(figsize=(20,10), title= 'Gender')
+plt.subplot(222)
+train['Married'].value_counts(normalize=True).plot.bar(title= 'Married')
+plt.subplot(223)
+train['Self_Employed'].value_counts(normalize=True).plot.bar(title= 'Self Employed')
+plt.subplot(224)
+train['Credit_History'].value_counts(normalize=True).plot.bar(title= 'Credit_History')
