@@ -67,3 +67,9 @@ plt.tight_layout()
 
 # Display the figure in Streamlit
 st.pyplot(fig)
+
+plt.figure(1)
+plt.subplot(121)
+sns.distplot(train['ApplicantIncome'])
+plt.subplot(122)
+train['ApplicantIncome'].plot.box(figsize=(16,5))
