@@ -84,3 +84,16 @@ axes[1].set_title("Applicant Income Box Plot")
 
 # Display the figure in Streamlit
 st.pyplot(fig)
+
+# Plot ApplicantIncome boxplot grouped by Education
+st.write("### Applicant Income by Education")
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Create the boxplot
+train.boxplot(column='ApplicantIncome', by='Education', ax=ax)
+ax.set_title("Applicant Income by Education")
+ax.set_ylabel("Applicant Income")
+plt.suptitle("")  # Remove the automatic "Boxplot grouped by Education" title
+
+# Display the figure in Streamlit
+st.pyplot(fig)
