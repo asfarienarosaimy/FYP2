@@ -12,10 +12,10 @@ test_original = test.copy()
 
 st.write(train.head(3))
 
-train.info()
+st.write(train.info())
 
-test.info()
+st.write(test.info())
 
-train['Loan_Status'].value_counts()
+st.write(train['Loan_Status'].value_counts())
 
-train['Loan_Status'].value_counts().plot.bar(figsize=(10,6), title='Loan Status')
+st.write(train['Loan_Status'].value_counts().plot.bar(figsize=(10,6), title='Loan Status'))
