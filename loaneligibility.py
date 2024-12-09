@@ -49,10 +49,21 @@ plt.tight_layout()
 # Display the figure in Streamlit
 st.pyplot(fig)
 
-plt.figure(1)
-plt.subplot(131)
-train['Dependents'].value_counts(normalize=True).plot.bar(figsize=(24,6), title='Dependents')
-plt.subplot(132)
-train['Education'].value_counts(normalize=True).plot.bar(title='Education')
-plt.subplot(133)
-train['Property_Area'].value_counts(normalize=True).plot.bar(title='Property Area')
+# Plot Dependents, Education, Property Area subplots
+st.write("### Other Distributions")
+fig, axes = plt.subplots(1, 3, figsize=(24, 6))
+
+# Dependents distribution
+train['Dependents'].value_counts(normalize=True).plot.bar(ax=axes[0], title="Dependents")
+
+# Education distribution
+train['Education'].value_counts(normalize=True).plot.bar(ax=axes[1], title="Education")
+
+# Property_Area distribution
+train['Property_Area'].value_counts(normalize=True).plot.bar(ax=axes[2], title="Property Area")
+
+# Adjust layout
+plt.tight_layout()
+
+# Display the figure in Streamlit
+st.pyplot(fig)
