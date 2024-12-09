@@ -18,4 +18,4 @@ st.write(test.info())
 
 st.write(train['Loan_Status'].value_counts())
 
-st.write(train['Loan_Status'].value_counts().plot.bar(figsize=(10,6), title='Loan Status'))
+st.pyplot(train['Loan_Status'].value_counts().plot.bar(figsize=(10,6), title='Loan Status'))
