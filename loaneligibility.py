@@ -68,8 +68,19 @@ plt.tight_layout()
 # Display the figure in Streamlit
 st.pyplot(fig)
 
-plt.figure(1)
-plt.subplot(121)
-sns.distplot(train['ApplicantIncome'])
-plt.subplot(122)
-train['ApplicantIncome'].plot.box(figsize=(16,5))
+# Plot ApplicantIncome distribution and boxplot
+st.write("### Applicant Income Distribution and Boxplot")
+fig, axes = plt.subplots(1, 2, figsize=(16, 5))
+
+# Distribution plot (left subplot)
+sns.histplot(train['ApplicantIncome'], kde=True, ax=axes[0])  # Updated sns.distplot to sns.histplot
+axes[0].set_title("Applicant Income Distribution")
+axes[0].set_xlabel("Applicant Income")
+axes[0].set_ylabel("Frequency")
+
+# Box plot (right subplot)
+train['ApplicantIncome'].plot.box(ax=axes[1])
+axes[1].set_title("Applicant Income Box Plot")
+
+# Display the figure in Streamlit
+st.pyplot(fig)
