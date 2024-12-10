@@ -131,3 +131,20 @@ ax.legend(title="Loan Status", loc='best')
 
 # Display the plot in Streamlit
 st.pyplot(fig)
+
+# Plot Property_Area vs Loan_Status as a stacked bar plot
+st.write("### Property Area vs Loan Status")
+fig, ax = plt.subplots(figsize=(6, 4))
+
+# Create a crosstab and normalize it
+Property_Area = pd.crosstab(train['Property_Area'], train['Loan_Status'])
+Property_Area.div(Property_Area.sum(1).astype(float), axis=0).plot(kind='bar', stacked=True, ax=ax)
+
+# Add labels and legend
+ax.set_title("Property Area vs Loan Status")
+ax.set_xlabel("Property Area")
+ax.set_ylabel("Proportion")
+ax.legend(title="Loan Status", bbox_to_anchor=(1.05, 1.0), loc='upper left')  # Adjust legend position
+
+# Display the plot in Streamlit
+st.pyplot(fig)
