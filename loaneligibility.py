@@ -114,3 +114,20 @@ ax.legend(loc='best')
 
 # Display the figure in Streamlit
 st.pyplot(fig)
+
+# Plot Credit_History vs Loan_Status as a stacked bar plot
+st.write("### Credit History vs Loan Status")
+fig, ax = plt.subplots(figsize=(6, 4))
+
+# Create a crosstab and normalize it
+Credit_History = pd.crosstab(train['Credit_History'], train['Loan_Status'])
+Credit_History.div(Credit_History.sum(1).astype(float), axis=0).plot(kind='bar', stacked=True, ax=ax)
+
+# Add labels and legend
+ax.set_title("Credit History vs Loan Status")
+ax.set_xlabel("Credit History")
+ax.set_ylabel("Proportion")
+ax.legend(title="Loan Status", loc='best')
+
+# Display the plot in Streamlit
+st.pyplot(fig)
