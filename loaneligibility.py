@@ -53,10 +53,10 @@ for name, model in models.items():
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
-    print(f'{name} Accuracy: {accuracy}')
-    print(classification_report(y_test, y_pred))  # Precision, Recall, F1-score
-    print(confusion_matrix(y_test, y_pred))
-    print("-"*30)
+    st.write(f'{name} Accuracy: {accuracy}')
+    st.write(classification_report(y_test, y_pred))  # Precision, Recall, F1-score
+    st.write(confusion_matrix(y_test, y_pred))
+    st.write("-"*30)
 
 
 # Example Prediction (replace with your values)
@@ -96,4 +96,4 @@ new_applicant_scaled = scaler.transform(new_applicant)
 
 for name, model in models.items():
     prediction = model.predict(new_applicant_scaled)[0]
-    print(f"{name} Prediction: {'Loan Approved' if prediction == 1 else 'Loan Rejected'}")
+    st.write(f"{name} Prediction: {'Loan Approved' if prediction == 1 else 'Loan Rejected'}")
