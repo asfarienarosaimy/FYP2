@@ -53,7 +53,7 @@ for name, model in models.items():
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
-    st.write[f"{name} Accuracy: {accuracy}"]
+    "Accuracy":[f"{name} Accuracy: {accuracy}"]
     st.write(classification_report(y_test, y_pred))  # Precision, Recall, F1-score
     st.write(confusion_matrix(y_test, y_pred))
     st.write("-"*30)
