@@ -8,6 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.preprocessing import StandardScaler
+import streamlit as st
 
 # Sample Loan Dataset (Replace with your actual data)
 data = {
@@ -53,13 +54,7 @@ for name, model in models.items():
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
-
-    accuracy_model = {
-        "Accuracy":[f"{name} Accuracy: {accuracy}"]
-    }
-    accuracy_df = pd.DataFrame(accuracy_model)
-    st.table(accuracy_df)
-    
+    st.write(f'{name} Accuracy: {accuracy}')
     st.write(classification_report(y_test, y_pred))  # Precision, Recall, F1-score
     st.write(confusion_matrix(y_test, y_pred))
     st.write("-"*30)
