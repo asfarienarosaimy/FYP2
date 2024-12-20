@@ -7,23 +7,30 @@ import pickle  # Use to load the trained ML model
 # For demonstration, we'll use a placeholder for the prediction function
 def predict_loan_eligibility(input_data):
     # Placeholder prediction logic
-    return "Eligible" if input_data['Credit History'] == 1 else "Not Eligible"
+    score = input_data['Applicant Income'] / (input_data['Loan Amount'] + 1)  # Avoid division by zero
+    eligibility = "Eligible" if score > 0.5 and input_data['Credit History'] == 1 else "Not Eligible"
+    return eligibility, score
 
 # Streamlit UI
-st.title("Loan Eligibility Prediction")
-st.write("Enter your information below to check your loan eligibility.")
+st.title("Loan Eligibility Prediction Dashboard")
+st.write("This tool helps predict loan eligibility based on user-provided information. Enter your details below to get a detailed analysis and prediction.")
 
 # User Input Form
 with st.form("loan_form"):
+    st.subheader("Applicant Information")
     gender = st.selectbox("Gender:", ["Male", "Female"], index=0)
     marital_status = st.selectbox("Marital Status:", ["Married", "Single"], index=1)
     dependents = st.selectbox("Number of Dependents:", ["0", "1", "2", "3+"], index=0)
     education = st.selectbox("Education Level:", ["Graduate", "Not Graduate"], index=0)
     self_employed = st.selectbox("Self Employed:", ["No", "Yes"], index=0)
+    
+    st.subheader("Financial Information")
     applicant_income = st.number_input("Applicant Income (USD):", min_value=0, value=0, step=100)
     coapplicant_income = st.number_input("Coapplicant Income (USD):", min_value=0, value=0, step=100)
     loan_amount = st.number_input("Loan Amount (USD):", min_value=0, value=0, step=100)
     loan_amount_term = st.number_input("Loan Amount Term (months):", min_value=0, value=360, step=1)
+    
+    st.subheader("Credit and Property Details")
     credit_history = st.selectbox("Credit History:", ["No", "Yes"], index=1)
     property_area = st.selectbox("Property Area:", ["Urban", "Semiurban", "Rural"], index=0)
 
@@ -47,8 +54,19 @@ if submit_button:
     }
 
     # Predict using the loaded model
-    prediction = predict_loan_eligibility(input_data)
+    prediction, score = predict_loan_eligibility(input_data)
 
     # Display the result
     st.subheader("Prediction Result")
-    st.write(f"The applicant is **{prediction}** for the loan.")
+    st.write(f"**Eligibility:** {prediction}")
+    st.write(f"**Score:** {score:.2f}")
+    
+    # Detailed Interpretation
+    st.subheader("Detailed Analysis")
+    st.write("The prediction is based on the following considerations:")
+    st.write(f"- Applicant Income: {applicant_income} USD")
+    st.write(f"- Loan Amount: {loan_amount} USD")
+    st.write(f"- Credit History: {'Good' if credit_history == 'Yes' else 'Poor'}")
+    st.write(f"- Loan Term: {loan_amount_term} months")
+    st.write(f"- Property Area: {property_area}")
+    st.write("These factors are evaluated to determine the loan eligibility score and final decision.")
