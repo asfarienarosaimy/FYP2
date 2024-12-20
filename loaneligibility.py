@@ -1,100 +1,54 @@
-# prompt: generate code for loan eligibility prediction calculator using random forest, logistic regression and decision tree
-
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.preprocessing import StandardScaler
 import streamlit as st
+import pandas as pd
+import pickle  # Use to load the trained ML model
 
-# Sample Loan Dataset (Replace with your actual data)
-data = {
-    'Gender': ['Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female'],
-    'Married': ['Yes', 'Yes', 'Yes', 'No', 'Yes', 'Yes', 'No'],
-    'Dependents': [0, 1, 2, 0, 2, 1, 0],
-    'Education': ['Graduate', 'Graduate', 'Graduate', 'Graduate', 'Not Graduate', 'Graduate', 'Graduate'],
-    'Self_Employed': ['No', 'Yes', 'No', 'No', 'No', 'Yes', 'No'],
-    'ApplicantIncome': [5849, 4583, 3000, 2583, 6000, 5417, 2333],
-    'CoapplicantIncome': [0.0, 1508.0, 0.0, 2358.0, 0.0, 4196.0, 1516.0],
-    'LoanAmount': [128.0, 128.0, 66.0, 120.0, 141.0, 267.0, 95.0],
-    'Loan_Amount_Term': [360.0, 360.0, 360.0, 360.0, 360.0, 360.0, 360.0],
-    'Credit_History': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0],
-    'Property_Area': ['Urban', 'Rural', 'Urban', 'Urban', 'Urban', 'Urban', 'Rural'],
-    'Loan_Status': ['Y', 'N', 'Y', 'Y', 'Y', 'N', 'N']
-}
-df = pd.DataFrame(data)
+# Load the trained machine learning model
+# model = pickle.load(open("model.pkl", "rb"))
+# For demonstration, we'll use a placeholder for the prediction function
+def predict_loan_eligibility(input_data):
+    # Placeholder prediction logic
+    return "Eligible" if input_data['Credit History'] == 1 else "Not Eligible"
 
-# Preprocessing
-df = pd.get_dummies(df, columns=['Gender', 'Married', 'Education', 'Self_Employed', 'Property_Area'], drop_first=True)
-df.replace({'Loan_Status': {'Y': 1, 'N': 0}}, inplace=True) # Convert loan status to numerical values
+# Streamlit UI
+st.title("Loan Eligibility Prediction")
+st.write("Enter your information below to check your loan eligibility.")
 
+# User Input Form
+with st.form("loan_form"):
+    gender = st.selectbox("Gender:", ["Male", "Female"], index=0)
+    marital_status = st.selectbox("Marital Status:", ["Married", "Single"], index=1)
+    dependents = st.selectbox("Number of Dependents:", ["0", "1", "2", "3+"], index=0)
+    education = st.selectbox("Education Level:", ["Graduate", "Not Graduate"], index=0)
+    self_employed = st.selectbox("Self Employed:", ["No", "Yes"], index=0)
+    applicant_income = st.number_input("Applicant Income (USD):", min_value=0, value=0, step=100)
+    coapplicant_income = st.number_input("Coapplicant Income (USD):", min_value=0, value=0, step=100)
+    loan_amount = st.number_input("Loan Amount (USD):", min_value=0, value=0, step=100)
+    loan_amount_term = st.number_input("Loan Amount Term (months):", min_value=0, value=360, step=1)
+    credit_history = st.selectbox("Credit History:", ["No", "Yes"], index=1)
+    property_area = st.selectbox("Property Area:", ["Urban", "Semiurban", "Rural"], index=0)
 
-X = df.drop('Loan_Status', axis=1)
-y = df['Loan_Status']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    submit_button = st.form_submit_button(label="Predict")
 
+# Process input and show prediction
+if submit_button:
+    # Convert inputs into the format required by the model
+    input_data = {
+        "Gender": 1 if gender == "Male" else 0,
+        "Marital Status": 1 if marital_status == "Married" else 0,
+        "Dependents": 3 if dependents == "3+" else int(dependents),
+        "Education": 1 if education == "Graduate" else 0,
+        "Self Employed": 1 if self_employed == "Yes" else 0,
+        "Applicant Income": applicant_income,
+        "Coapplicant Income": coapplicant_income,
+        "Loan Amount": loan_amount,
+        "Loan Amount Term": loan_amount_term,
+        "Credit History": 1 if credit_history == "Yes" else 0,
+        "Property Area": ["Urban", "Semiurban", "Rural"].index(property_area),
+    }
 
-# Scaling Numerical Features
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+    # Predict using the loaded model
+    prediction = predict_loan_eligibility(input_data)
 
-
-# Train and Evaluate Models
-models = {
-    'Random Forest': RandomForestClassifier(),
-    'Logistic Regression': LogisticRegression(),
-    'Decision Tree': DecisionTreeClassifier()
-}
-
-for name, model in models.items():
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    st.write(f'{name} Accuracy: {accuracy}')
-    st.write(classification_report(y_test, y_pred))  # Precision, Recall, F1-score
-    st.write(confusion_matrix(y_test, y_pred))
-    st.write("-"*30)
-
-
-# Example Prediction (replace with your values)
-new_applicant = pd.DataFrame({
-    'Gender_Male': [1],
-    'Married_Yes': [1],
-    'Dependents': [0],
-    'Education_Not Graduate': [0],
-    'Self_Employed_Yes': [0],
-    'ApplicantIncome': [6000],
-    'CoapplicantIncome': [0],
-    'LoanAmount': [140],
-    'Loan_Amount_Term': [360],
-    'Credit_History': [1],
-    # Instead of manually creating Property_Area dummies,
-    # use the same 'Property_Area' column as in original data
-    'Property_Area': ['Urban']  
-})
-
-# Apply get_dummies to new_applicant to ensure consistent columns
-new_applicant = pd.get_dummies(new_applicant, 
-                               columns=['Gender_Male', 'Married_Yes', 'Education_Not Graduate', 'Self_Employed_Yes', 'Property_Area'], 
-                               drop_first=True)
-
-# Align columns with training data - add missing columns and fill with 0
-for col in X.columns:
-    if col not in new_applicant.columns:
-        new_applicant[col] = 0
-
-# Reorder columns to match the order in training data
-new_applicant = new_applicant[X.columns]
-
-# Scale new applicant data
-new_applicant_scaled = scaler.transform(new_applicant)
-
-#... (rest of your code)
-
-for name, model in models.items():
-    prediction = model.predict(new_applicant_scaled)[0]
-    st.write(f"{name} Prediction: {'Loan Approved' if prediction == 1 else 'Loan Rejected'}")
+    # Display the result
+    st.subheader("Prediction Result")
+    st.write(f"The applicant is **{prediction}** for the loan.")
