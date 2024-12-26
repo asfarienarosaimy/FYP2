@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
+# Title of the application
 st.title("Loan Dataset Viewer")
 
 # File uploader widget
@@ -13,54 +15,36 @@ if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
         st.write("### Dataset Preview")
         st.write(df.head())  # Display the first few rows of the dataset
-        
-    except Exception as e:
-        st.error(f"An error occurred while reading the file: {e}")
-else:
-    st.info("Please upload a CSV file to proceed.")
 
-# Filter data for Applicant Income <= 40000
-        df = df[df['ApplicantIncome'] <= 40000] # Properly aligned with parent block
-
+        # Filter Applicant Income <= 40000
+        df_filtered_applicant = df[df['ApplicantIncome'] <= 40000]
         st.write("### Filtered Dataset (Applicant Income ≤ 40000)")
-        st.write(df.head())  # Display the first few rows of the filtered dataset
-except Exception as e:
-        st.error(f"An error occured: {e}")
+        st.write(df_filtered_applicant.head())
 
-# Plot histogram
+        # Plot histogram for Applicant Income
         st.write("### Distribution of Applicant Income (Up to 40000)")
         fig, ax = plt.subplots()
-        df['ApplicantIncome'].hist(bins=50, ax=ax)
+        df_filtered_applicant['ApplicantIncome'].hist(bins=50, ax=ax)
         ax.set_xlabel('Applicant Income')
         ax.set_ylabel('Frequency')
-        ax.set_title('Distribution of Applicant Income (up to 40000)')
+        ax.set_title('Distribution of Applicant Income (Up to 40000)')
         st.pyplot(fig)
 
-    except Exception as e:
-        st.error(f"An error occurred while processing the data: {e}")
-else:
-    st.info("Please upload a CSV file to proceed.")
-
-# Coapplicant Income Analysis
+        # Coapplicant Income Analysis
         st.write("## Coapplicant Income Analysis (Up to 20000)")
-        df_coapplicant = df[df['CoapplicantIncome'] <= 20000]
+        df_filtered_coapplicant = df[df['CoapplicantIncome'] <= 20000]
         st.write("Filtered Dataset (Coapplicant Income ≤ 20000):")
-        st.write(df_coapplicant.head())
+        st.write(df_filtered_coapplicant.head())
 
         # Plot Coapplicant Income Distribution
         fig2, ax2 = plt.subplots()
-        df_coapplicant['CoapplicantIncome'].hist(bins=50, ax=ax2)
+        df_filtered_coapplicant['CoapplicantIncome'].hist(bins=50, ax=ax2)
         ax2.set_xlabel('Coapplicant Income')
         ax2.set_ylabel('Frequency')
         ax2.set_title('Distribution of Coapplicant Income (Up to 20000)')
         st.pyplot(fig2)
 
-    except Exception as e:
-        st.error(f"An error occurred while processing the data: {e}")
-else:
-    st.info("Please upload a CSV file to proceed.")
-
-# Loan Amount Analysis
+        # Loan Amount Analysis
         st.write("## Loan Amount Analysis")
         fig3, ax3 = plt.subplots()
         df['LoanAmount'].hist(bins=50, ax=ax3)
@@ -69,12 +53,7 @@ else:
         ax3.set_title('Distribution of Loan Amount')
         st.pyplot(fig3)
 
-    except Exception as e:
-        st.error(f"An error occurred while processing the data: {e}")
-else:
-    st.info("Please upload a CSV file to proceed.")
-
-# Gender Distribution
+        # Gender Distribution
         st.write("## Gender Distribution")
         fig4, ax4 = plt.subplots(figsize=(8, 6))
         sns.countplot(x='Gender', data=df, ax=ax4)
@@ -83,12 +62,7 @@ else:
         ax4.set_ylabel('Count')
         st.pyplot(fig4)
 
-    except Exception as e:
-        st.error(f"An error occurred while processing the data: {e}")
-else:
-    st.info("Please upload a CSV file to proceed.")
-
-# Married Distribution
+        # Married Distribution
         st.write("## Married Distribution")
         fig5, ax5 = plt.subplots(figsize=(8, 6))
         sns.countplot(x='Married', data=df, ax=ax5)
@@ -97,12 +71,7 @@ else:
         ax5.set_ylabel('Count')
         st.pyplot(fig5)
 
-    except Exception as e:
-        st.error(f"An error occurred while processing the data: {e}")
-else:
-    st.info("Please upload a CSV file to proceed.")
-
-# Dependents Distribution
+        # Dependents Distribution
         st.write("## Dependents Distribution")
         fig6, ax6 = plt.subplots(figsize=(8, 6))
         sns.countplot(x='Dependents', data=df, ax=ax6)
@@ -111,12 +80,7 @@ else:
         ax6.set_ylabel('Count')
         st.pyplot(fig6)
 
-    except Exception as e:
-        st.error(f"An error occurred while processing the data: {e}")
-else:
-    st.info("Please upload a CSV file to proceed.")
-
-# Education Distribution
+        # Education Distribution
         st.write("## Education Distribution")
         fig7, ax7 = plt.subplots(figsize=(8, 6))
         sns.countplot(x='Education', data=df, ax=ax7)
