@@ -341,12 +341,12 @@ if uploaded_file is not None:
         ax2.invert_yaxis()  # Show the most important feature at the top
         st.pyplot(fig2)
 
-# Random Forest Classifier
-# Handle missing values
-st.write("### Random Forest: Handling Missing Values")
-imputer = SimpleImputer(strategy='most_frequent')
-df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
-st.write("Missing values handled.")
+        # Random Forest Classifier
+        # Handle missing values
+        st.write("### Random Forest: Handling Missing Values")
+        imputer = SimpleImputer(strategy='most_frequent')
+        df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
+        st.write("Missing values handled.")
 
 # Convert categorical variables to numeric using Label Encoding
 label_encoders = {}
