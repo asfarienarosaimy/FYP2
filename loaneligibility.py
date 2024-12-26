@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, f1_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, f1_score, precision_score
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder
 
@@ -13,6 +14,9 @@ st.title("Loan Dataset Viewer and Preprocessing")
 
 # Title of the Streamlit app
 st.title("Loan Eligibility Prediction using Random Forest")
+
+#Streamlit title
+st.title("Loan Status Prediction using Logistic Regression")
 
 # File uploader widget
 uploaded_file = st.file_uploader("Upload your loan_data_set.csv file", type=["csv"])
@@ -252,6 +256,188 @@ if uploaded_file is not None:
         predicted_loan_status = model.predict(new_applicant_df)
         loan_status = 'Approved' if predicted_loan_status[0] == 1 else 'Rejected'
         st.write(f"Predicted Loan Status: {loan_status}")
+
+        # Logistic Regression
+        # Preprocess the dataset
+        # Handle missing values
+        imputer = SimpleImputer(strategy='most_frequent')  # Use 'most_frequent' for categorical columns
+        data = pd.DataFrame(imputer.fit_transform(data), columns=data.columns)
+
+        # Convert categorical variables to numeric using Label Encoding
+        label_encoders = {}
+        for column in data.select_dtypes(include=['object']).columns:
+            le = LabelEncoder()
+            data[column] = le.fit_transform(data[column])
+            label_encoders[column] = le
+
+        # Separate features (X) and target (y)
+        X = data.drop('Loan_Status', axis=1)  # Replace 'Loan_Status' with your target column
+        y = data['Loan_Status']  # Replace 'Loan_Status' with your target column
+
+        # Split data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Train a Logistic Regression model
+        logreg_model = LogisticRegression(random_state=42, max_iter=1000)
+        logreg_model.fit(X_train, y_train)
+
+        # Make predictions on the test set
+        y_pred_logreg = logreg_model.predict(X_test)
+
+        # Evaluate the model
+        accuracy_logreg = accuracy_score(y_test, y_pred_logreg)
+        st.write(f"### Logistic Regression Accuracy: {accuracy_logreg:.4f}")
+
+        # Confusion Matrix
+        cm_logreg = confusion_matrix(y_test, y_pred_logreg)
+        st.write("### Confusion Matrix")
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.heatmap(cm_logreg, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=['Predicted N', 'Predicted Y'],
+                    yticklabels=['Actual N', 'Actual Y'])
+        plt.xlabel('Predicted')
+        plt.ylabel('Actual')
+        plt.title('Confusion Matrix for Logistic Regression')
+        st.pyplot(fig)
+
+        # Recall
+        recall = recall_score(y_test, y_pred_logreg)
+        st.write(f"### Recall for Logistic Regression: {recall:.4f}")
+
+        # F1 Score
+        f1_logreg = f1_score(y_test, y_pred_logreg)
+        st.write(f"### F1 Score for Logistic Regression: {f1_logreg:.4f}")
+
+        # Precision
+        precision = precision_score(y_test, y_pred_logreg)
+        st.write(f"### Precision for Logistic Regression: {precision:.4f}")
+
+        # Feature Importance using model coefficients
+        feature_importances = np.abs(logreg_model.coef_[0])  # Take the absolute value of coefficients
+        feature_names = X.columns
+
+        # Create a DataFrame for better visualization
+        importance_df = pd.DataFrame({
+            'Feature': feature_names,
+            'Importance': feature_importances
+        }).sort_values(by='Importance', ascending=False)
+
+        # Display the feature importances
+        st.write("### Feature Importances:")
+        st.write(importance_df)
+
+        # Plot the feature importances
+        st.write("### Feature Importance Visualization")
+        fig2, ax2 = plt.subplots(figsize=(10, 6))
+        ax2.barh(importance_df['Feature'], importance_df['Importance'], color='blue')
+        ax2.set_xlabel('Importance')
+        ax2.set_ylabel('Feature')
+        ax2.set_title('Feature Importance (Logistic Regression)')
+        ax2.invert_yaxis()  # Show the most important feature at the top
+        st.pyplot(fig2)
+
+        # Decision Tree
+        # Preprocess the dataset
+        # Handle missing values using most frequent strategy for categorical columns
+        imputer = SimpleImputer(strategy='most_frequent')
+        data = pd.DataFrame(imputer.fit_transform(data), columns=data.columns)
+
+        # Convert categorical variables to numeric using Label Encoding
+        label_encoders = {}
+        for column in data.select_dtypes(include=['object']).columns:
+            le = LabelEncoder()
+            data[column] = le.fit_transform(data[column])
+            label_encoders[column] = le
+
+        # Separate features (X) and target (y)
+        X = data.drop('Loan_Status', axis=1)  # 'Loan_Status' is the target variable
+        y = data['Loan_Status']  # Target variable
+
+        # Split data into training and testing sets (80% train, 20% test)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Initialize and train Logistic Regression model
+        lr_model = LogisticRegression(random_state=42)
+        lr_model.fit(X_train, y_train)
+
+        # Make predictions with Logistic Regression
+        y_pred_lr = lr_model.predict(X_test)
+
+        # Evaluate Logistic Regression model
+        accuracy_lr = accuracy_score(y_test, y_pred_lr)
+        recall_lr = recall_score(y_test, y_pred_lr)
+        f1_lr = f1_score(y_test, y_pred_lr)
+        precision_lr = precision_score(y_test, y_pred_lr)
+
+        st.write("### Logistic Regression Model Evaluation")
+        st.write(f"Accuracy: {accuracy_lr:.4f}")
+        st.write(f"Recall: {recall_lr:.4f}")
+        st.write(f"F1 Score: {f1_lr:.4f}")
+        st.write(f"Precision: {precision_lr:.4f}")
+
+        # Plot Confusion Matrix for Logistic Regression
+        cm_lr = confusion_matrix(y_test, y_pred_lr)
+        st.write("### Confusion Matrix for Logistic Regression")
+        fig_cm_lr, ax_cm_lr = plt.subplots(figsize=(8, 6))
+        sns.heatmap(cm_lr, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=['Predicted No', 'Predicted Yes'],
+                    yticklabels=['Actual No', 'Actual Yes'])
+        ax_cm_lr.set_xlabel('Predicted')
+        ax_cm_lr.set_ylabel('Actual')
+        ax_cm_lr.set_title('Confusion Matrix for Logistic Regression')
+        st.pyplot(fig_cm_lr)
+
+        # Initialize and train Decision Tree model
+        dt_model = DecisionTreeClassifier(random_state=42)
+        dt_model.fit(X_train, y_train)
+
+        # Make predictions with Decision Tree
+        y_pred_dt = dt_model.predict(X_test)
+
+        # Evaluate Decision Tree model
+        accuracy_dt = accuracy_score(y_test, y_pred_dt)
+        recall_dt = recall_score(y_test, y_pred_dt)
+        f1_dt = f1_score(y_test, y_pred_dt)
+        precision_dt = precision_score(y_test, y_pred_dt)
+
+        st.write("### Decision Tree Model Evaluation")
+        st.write(f"Accuracy: {accuracy_dt:.4f}")
+        st.write(f"Recall: {recall_dt:.4f}")
+        st.write(f"F1 Score: {f1_dt:.4f}")
+        st.write(f"Precision: {precision_dt:.4f}")
+
+        # Plot Confusion Matrix for Decision Tree
+        cm_dt = confusion_matrix(y_test, y_pred_dt)
+        st.write("### Confusion Matrix for Decision Tree")
+        fig_cm_dt, ax_cm_dt = plt.subplots(figsize=(8, 6))
+        sns.heatmap(cm_dt, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=['Predicted No', 'Predicted Yes'],
+                    yticklabels=['Actual No', 'Actual Yes'])
+        ax_cm_dt.set_xlabel('Predicted')
+        ax_cm_dt.set_ylabel('Actual')
+        ax_cm_dt.set_title('Confusion Matrix for Decision Tree')
+        st.pyplot(fig_cm_dt)
+
+        # Feature Importance for Decision Tree
+        feature_importances = dt_model.feature_importances_
+        feature_names = X.columns
+        importance_df = pd.DataFrame({
+            'Feature': feature_names,
+            'Importance': feature_importances
+        }).sort_values(by='Importance', ascending=False)
+
+        st.write("### Feature Importance (Decision Tree)")
+        st.write(importance_df)
+
+        # Plot Feature Importance
+        fig_importance, ax_importance = plt.subplots(figsize=(10, 6))
+        ax_importance.barh(importance_df['Feature'], importance_df['Importance'], color='orange')
+        ax_importance.set_xlabel('Importance')
+        ax_importance.set_ylabel('Feature')
+        ax_importance.set_title('Feature Importance for Decision Tree')
+        ax_importance.invert_yaxis()  # Most important feature at the top
+        st.pyplot(fig_importance)
+
 
     except Exception as e:
         st.error(f"An error occurred while processing the data: {e}")
