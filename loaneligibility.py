@@ -1,72 +1,129 @@
 import streamlit as st
 import pandas as pd
-import pickle  # Use to load the trained ML model
+import matplotlib.pyplot as plt
 
-# Load the trained machine learning model
-# model = pickle.load(open("model.pkl", "rb"))
-# For demonstration, we'll use a placeholder for the prediction function
-def predict_loan_eligibility(input_data):
-    # Placeholder prediction logic
-    score = input_data['Applicant Income'] / (input_data['Loan Amount'] + 1)  # Avoid division by zero
-    eligibility = "Eligible" if score > 0.5 and input_data['Credit History'] == 1 else "Not Eligible"
-    return eligibility, score
+st.title("Loan Dataset Viewer")
 
-# Streamlit UI
-st.title("Loan Eligibility Prediction Dashboard")
-st.write("This tool helps predict loan eligibility based on user-provided information. Enter your details below to get a detailed analysis and prediction.")
+# File uploader widget
+uploaded_file = st.file_uploader("Upload your loan_data_set.csv file", type=["csv"])
 
-# User Input Form
-with st.form("loan_form"):
-    st.subheader("Applicant Information")
-    gender = st.selectbox("Gender:", ["Male", "Female"], index=0)
-    marital_status = st.selectbox("Marital Status:", ["Married", "Single"], index=1)
-    dependents = st.selectbox("Number of Dependents:", ["0", "1", "2", "3+"], index=0)
-    education = st.selectbox("Education Level:", ["Graduate", "Not Graduate"], index=0)
-    self_employed = st.selectbox("Self Employed:", ["No", "Yes"], index=0)
-    
-    st.subheader("Financial Information")
-    applicant_income = st.number_input("Applicant Income (USD):", min_value=0, value=0, step=100)
-    coapplicant_income = st.number_input("Coapplicant Income (USD):", min_value=0, value=0, step=100)
-    loan_amount = st.number_input("Loan Amount (USD):", min_value=0, value=0, step=100)
-    loan_amount_term = st.number_input("Loan Amount Term (months):", min_value=0, value=360, step=1)
-    
-    st.subheader("Credit and Property Details")
-    credit_history = st.selectbox("Credit History:", ["No", "Yes"], index=1)
-    property_area = st.selectbox("Property Area:", ["Urban", "Semiurban", "Rural"], index=0)
+if uploaded_file is not None:
+    try:
+        # Read the uploaded CSV file
+        df = pd.read_csv(uploaded_file)
+        st.write("### Dataset Preview")
+        st.write(df.head())  # Display the first few rows of the dataset
+        
+    except Exception as e:
+        st.error(f"An error occurred while reading the file: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
 
-    submit_button = st.form_submit_button(label="Predict")
+# Filter data for Applicant Income <= 40000
+        df = df[df['ApplicantIncome'] <= 40000]
 
-# Process input and show prediction
-if submit_button:
-    # Convert inputs into the format required by the model
-    input_data = {
-        "Gender": 1 if gender == "Male" else 0,
-        "Marital Status": 1 if marital_status == "Married" else 0,
-        "Dependents": 3 if dependents == "3+" else int(dependents),
-        "Education": 1 if education == "Graduate" else 0,
-        "Self Employed": 1 if self_employed == "Yes" else 0,
-        "Applicant Income": applicant_income,
-        "Coapplicant Income": coapplicant_income,
-        "Loan Amount": loan_amount,
-        "Loan Amount Term": loan_amount_term,
-        "Credit History": 1 if credit_history == "Yes" else 0,
-        "Property Area": ["Urban", "Semiurban", "Rural"].index(property_area),
-    }
+        st.write("### Filtered Dataset (Applicant Income ≤ 40000)")
+        st.write(df.head())  # Display the first few rows of the filtered dataset
 
-    # Predict using the loaded model
-    prediction, score = predict_loan_eligibility(input_data)
+        # Plot histogram
+        st.write("### Distribution of Applicant Income (Up to 40000)")
+        fig, ax = plt.subplots()
+        df['ApplicantIncome'].hist(bins=50, ax=ax)
+        ax.set_xlabel('Applicant Income')
+        ax.set_ylabel('Frequency')
+        ax.set_title('Distribution of Applicant Income (up to 40000)')
+        st.pyplot(fig)
 
-    # Display the result
-    st.subheader("Prediction Result")
-    st.write(f"**Eligibility:** {prediction}")
-    st.write(f"**Score:** {score:.2f}")
-    
-    # Detailed Interpretation
-    st.subheader("Detailed Analysis")
-    st.write("The prediction is based on the following considerations:")
-    st.write(f"- Applicant Income: {applicant_income} USD")
-    st.write(f"- Loan Amount: {loan_amount} USD")
-    st.write(f"- Credit History: {'Good' if credit_history == 'Yes' else 'Poor'}")
-    st.write(f"- Loan Term: {loan_amount_term} months")
-    st.write(f"- Property Area: {property_area}")
-    st.write("These factors are evaluated to determine the loan eligibility score and final decision.")
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
+
+# Coapplicant Income Analysis
+        st.write("## Coapplicant Income Analysis (Up to 20000)")
+        df_coapplicant = df[df['CoapplicantIncome'] <= 20000]
+        st.write("Filtered Dataset (Coapplicant Income ≤ 20000):")
+        st.write(df_coapplicant.head())
+
+        # Plot Coapplicant Income Distribution
+        fig2, ax2 = plt.subplots()
+        df_coapplicant['CoapplicantIncome'].hist(bins=50, ax=ax2)
+        ax2.set_xlabel('Coapplicant Income')
+        ax2.set_ylabel('Frequency')
+        ax2.set_title('Distribution of Coapplicant Income (Up to 20000)')
+        st.pyplot(fig2)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
+
+# Loan Amount Analysis
+        st.write("## Loan Amount Analysis")
+        fig3, ax3 = plt.subplots()
+        df['LoanAmount'].hist(bins=50, ax=ax3)
+        ax3.set_xlabel('Loan Amount')
+        ax3.set_ylabel('Frequency')
+        ax3.set_title('Distribution of Loan Amount')
+        st.pyplot(fig3)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
+
+# Gender Distribution
+        st.write("## Gender Distribution")
+        fig4, ax4 = plt.subplots(figsize=(8, 6))
+        sns.countplot(x='Gender', data=df, ax=ax4)
+        ax4.set_title('Gender Distribution')
+        ax4.set_xlabel('Gender')
+        ax4.set_ylabel('Count')
+        st.pyplot(fig4)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
+
+# Married Distribution
+        st.write("## Married Distribution")
+        fig5, ax5 = plt.subplots(figsize=(8, 6))
+        sns.countplot(x='Married', data=df, ax=ax5)
+        ax5.set_title('Married Distribution')
+        ax5.set_xlabel('Married')
+        ax5.set_ylabel('Count')
+        st.pyplot(fig5)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
+
+# Dependents Distribution
+        st.write("## Dependents Distribution")
+        fig6, ax6 = plt.subplots(figsize=(8, 6))
+        sns.countplot(x='Dependents', data=df, ax=ax6)
+        ax6.set_title('Dependents Distribution')
+        ax6.set_xlabel('Number of Dependents')
+        ax6.set_ylabel('Count')
+        st.pyplot(fig6)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
+
+# Education Distribution
+        st.write("## Education Distribution")
+        fig7, ax7 = plt.subplots(figsize=(8, 6))
+        sns.countplot(x='Education', data=df, ax=ax7)
+        ax7.set_title('Education Distribution')
+        ax7.set_xlabel('Education Level')
+        ax7.set_ylabel('Count')
+        st.pyplot(fig7)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
