@@ -261,18 +261,18 @@ if uploaded_file is not None:
         # Preprocess the dataset
         # Handle missing values
         imputer = SimpleImputer(strategy='most_frequent')  # Use 'most_frequent' for categorical columns
-        data = pd.DataFrame(imputer.fit_transform(data), columns=data.columns)
+        df = pd.DataFrame(imputer.fit_transform(df), columns=data.columns)
 
         # Convert categorical variables to numeric using Label Encoding
         label_encoders = {}
-        for column in data.select_dtypes(include=['object']).columns:
+        for column in df.select_dtypes(include=['object']).columns:
             le = LabelEncoder()
-            data[column] = le.fit_transform(data[column])
+            df[column] = le.fit_transform(df[column])
             label_encoders[column] = le
 
         # Separate features (X) and target (y)
-        X = data.drop('Loan_Status', axis=1)  # Replace 'Loan_Status' with your target column
-        y = data['Loan_Status']  # Replace 'Loan_Status' with your target column
+        X = df.drop('Loan_Status', axis=1)  # Replace 'Loan_Status' with your target column
+        y = df['Loan_Status']  # Replace 'Loan_Status' with your target column
 
         # Split data into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
