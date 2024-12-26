@@ -363,7 +363,7 @@ if uploaded_file is not None:
         dt_model.fit(X_train, y_train)
 
         # Make predictions with Decision Tree
-        y_pred_lr = dt_model.predict(X_test)
+        y_pred_dt = dt_model.predict(X_test)
 
         # Evaluate Decision Tree model
         accuracy_dt = accuracy_score(y_test, y_pred_dt)
