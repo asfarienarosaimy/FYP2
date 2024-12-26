@@ -20,9 +20,6 @@ st.title("Loan Eligibility Prediction using Random Forest")
 #Streamlit title
 st.title("Loan Status Prediction using Logistic Regression")
 
-#Streamlit title
-st.title("Loan Status Prediction using Decision Tree")
-
 # File uploader widget
 uploaded_file = st.file_uploader("Upload your loan_data_set.csv file", type=["csv"])
 
@@ -164,10 +161,10 @@ if uploaded_file is not None:
         st.write("### Final Cleaned and Transformed Dataset")
         st.write(df.head())  # Display the final cleaned dataset
 
-        # Random Forest Classifier
-        # Handling Missing Values
+        # Random Forest
+        # Handle missing values
         st.write("### Handling Missing Values")
-        imputer = SimpleImputer(strategy='most_frequent')
+        imputer = SimpleImputer(strategy='most_frequent')  # Use 'most_frequent' for categorical columns
         df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
         st.write("Missing values handled.")
 
@@ -220,6 +217,7 @@ if uploaded_file is not None:
         feature_importances = model.feature_importances_
         feature_names = X.columns
 
+        # Create a DataFrame for better visualization
         importance_df = pd.DataFrame({
             'Feature': feature_names,
             'Importance': feature_importances
@@ -228,60 +226,71 @@ if uploaded_file is not None:
         st.write("### Feature Importances")
         st.write(importance_df)
 
+        # Plot the feature importances
+        st.write("### Feature Importance Plot")
         plt.figure(figsize=(10, 6))
         plt.barh(importance_df['Feature'], importance_df['Importance'], color='green')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
         plt.title('Feature Importance (Random Forest)')
-        plt.gca().invert_yaxis()
+        plt.gca().invert_yaxis()  # Show the most important feature at the top
         st.pyplot(plt)
 
         # Predict loan status for a new applicant
         st.write("### Predict Loan Status for a New Applicant")
         new_applicant = {
-            'Gender': 1,
-            'Married': 1,
-            'Dependents': 2,
-            'Education': 1,
-            'Self_Employed': 0,
+            'Gender': 1,  # Example data: 1 for male, 0 for female
+            'Married': 1,  # Example data: 1 for married, 0 for not married
+            'Dependents': 2,  # Example data
+            'Education': 1,  # Example data: 1 for Graduate, 0 for Not Graduate
+            'Self_Employed': 0,  # Example data: 0 for No, 1 for Yes
             'ApplicantIncome': 5000,
             'CoapplicantIncome': 2000,
             'LoanAmount': 100,
             'Loan_Amount_Term': 360,
-            'Credit_History': 1,
-            'Property_Area': 1
+            'Credit_History': 1,  # Example data: 1 for Good Credit History
+            'Property_Area': 1  # Example data: 1 for Semiurban
         }
-
+        
         new_applicant_df = pd.DataFrame(new_applicant, index=[0])
-
+        
+        # Make prediction
         predicted_loan_status = model.predict(new_applicant_df)
         loan_status = 'Approved' if predicted_loan_status[0] == 1 else 'Rejected'
         st.write(f"Predicted Loan Status: {loan_status}")
 
         # Logistic Regression
-        st.write("# Logistic Regression")
-        imputer = SimpleImputer(strategy='most_frequent')
+        # Preprocess the dataset
+        # Handle missing values
+        imputer = SimpleImputer(strategy='most_frequent')  # Use 'most_frequent' for categorical columns
         df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 
+        # Convert categorical variables to numeric using Label Encoding
         label_encoders = {}
         for column in df.select_dtypes(include=['object']).columns:
             le = LabelEncoder()
             df[column] = le.fit_transform(df[column])
             label_encoders[column] = le
 
-        X = df.drop('Loan_Status', axis=1)
-        y = df['Loan_Status']
+        # Separate features (X) and target (y)
+        X = df.drop('Loan_Status', axis=1)  # Replace 'Loan_Status' with your target column
+        y = df['Loan_Status']  # Replace 'Loan_Status' with your target column
 
+        # Split data into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+        # Train a Logistic Regression model
         logreg_model = LogisticRegression(random_state=42, max_iter=1000)
         logreg_model.fit(X_train, y_train)
 
+        # Make predictions on the test set
         y_pred_logreg = logreg_model.predict(X_test)
 
+        # Evaluate the model
         accuracy_logreg = accuracy_score(y_test, y_pred_logreg)
         st.write(f"### Logistic Regression Accuracy: {accuracy_logreg:.4f}")
 
+        # Confusion Matrix
         cm_logreg = confusion_matrix(y_test, y_pred_logreg)
         st.write("### Confusion Matrix")
         fig, ax = plt.subplots(figsize=(8, 6))
@@ -293,55 +302,70 @@ if uploaded_file is not None:
         plt.title('Confusion Matrix for Logistic Regression')
         st.pyplot(fig)
 
+        # Recall
         recall = recall_score(y_test, y_pred_logreg)
         st.write(f"### Recall for Logistic Regression: {recall:.4f}")
 
+        # F1 Score
         f1_logreg = f1_score(y_test, y_pred_logreg)
         st.write(f"### F1 Score for Logistic Regression: {f1_logreg:.4f}")
 
+        # Precision
         precision = precision_score(y_test, y_pred_logreg)
         st.write(f"### Precision for Logistic Regression: {precision:.4f}")
 
-        feature_importances = np.abs(logreg_model.coef_[0])
+        # Feature Importance using model coefficients
+        feature_importances = np.abs(logreg_model.coef_[0])  # Take the absolute value of coefficients
         feature_names = X.columns
 
+        # Create a DataFrame for better visualization
         importance_df = pd.DataFrame({
             'Feature': feature_names,
             'Importance': feature_importances
         }).sort_values(by='Importance', ascending=False)
 
+        # Display the feature importances
         st.write("### Feature Importances:")
         st.write(importance_df)
 
+        # Plot the feature importances
+        st.write("### Feature Importance Visualization")
         fig2, ax2 = plt.subplots(figsize=(10, 6))
         ax2.barh(importance_df['Feature'], importance_df['Importance'], color='blue')
         ax2.set_xlabel('Importance')
         ax2.set_ylabel('Feature')
         ax2.set_title('Feature Importance (Logistic Regression)')
-        ax2.invert_yaxis()
+        ax2.invert_yaxis()  # Show the most important feature at the top
         st.pyplot(fig2)
 
-        # Decision Tree Classifier
-        st.write("# Decision Tree Classifier")
+        # Decision Tree
+        # Preprocess the dataset
+        # Handle missing values using most frequent strategy for categorical columns
         imputer = SimpleImputer(strategy='most_frequent')
         df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 
+        # Convert categorical variables to numeric using Label Encoding
         label_encoders = {}
         for column in df.select_dtypes(include=['object']).columns:
             le = LabelEncoder()
             df[column] = le.fit_transform(df[column])
             label_encoders[column] = le
 
-        X = df.drop('Loan_Status', axis=1)
-        y = df['Loan_Status']
+        # Separate features (X) and target (y)
+        X = df.drop('Loan_Status', axis=1)  # 'Loan_Status' is the target variable
+        y = df['Loan_Status']  # Target variable
 
+        # Split data into training and testing sets (80% train, 20% test)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+        # Initialize and train Decision Tree model
         dt_model = DecisionTreeClassifier(random_state=42)
         dt_model.fit(X_train, y_train)
 
+        # Make predictions with Decision Tree
         y_pred_dt = dt_model.predict(X_test)
 
+        # Evaluate Decision Tree model
         accuracy_dt = accuracy_score(y_test, y_pred_dt)
         recall_dt = recall_score(y_test, y_pred_dt)
         f1_dt = f1_score(y_test, y_pred_dt)
@@ -353,6 +377,7 @@ if uploaded_file is not None:
         st.write(f"F1 Score: {f1_dt:.4f}")
         st.write(f"Precision: {precision_dt:.4f}")
 
+        # Plot Confusion Matrix for Decision Tree
         cm_dt = confusion_matrix(y_test, y_pred_dt)
         st.write("### Confusion Matrix for Decision Tree")
         fig_cm_dt, ax_cm_dt = plt.subplots(figsize=(8, 6))
@@ -364,6 +389,7 @@ if uploaded_file is not None:
         ax_cm_dt.set_title('Confusion Matrix for Decision Tree')
         st.pyplot(fig_cm_dt)
 
+        # Feature Importance for Decision Tree
         feature_importances = dt_model.feature_importances_
         feature_names = X.columns
         importance_df = pd.DataFrame({
@@ -374,5 +400,16 @@ if uploaded_file is not None:
         st.write("### Feature Importance (Decision Tree)")
         st.write(importance_df)
 
+        # Plot Feature Importance
         fig_importance, ax_importance = plt.subplots(figsize=(10, 6))
         ax_importance.barh(importance_df['Feature'], importance_df['Importance'], color='orange')
+        ax_importance.set_xlabel('Importance')
+        ax_importance.set_ylabel('Feature')
+        ax_importance.set_title('Feature Importance for Decision Tree')
+        ax_importance.invert_yaxis()  # Most important feature at the top
+        st.pyplot(fig_importance)
+
+    except Exception as e:
+        st.error(f"An error occurred while processing the data: {e}")
+else:
+    st.info("Please upload a CSV file to proceed.")
