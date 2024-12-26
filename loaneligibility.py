@@ -155,6 +155,7 @@ if uploaded_file is not None:
         st.write("### Final Cleaned and Transformed Dataset")
         st.write(df.head())  # Display the final cleaned dataset
 
+        # Random Forest
         # Handle missing values
         st.write("### Handling Missing Values")
         imputer = SimpleImputer(strategy='most_frequent')  # Use 'most_frequent' for categorical columns
