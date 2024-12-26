@@ -11,6 +11,9 @@ from sklearn.preprocessing import LabelEncoder
 # Title of the application
 st.title("Loan Dataset Viewer and Preprocessing")
 
+# Title of the Streamlit app
+st.title("Loan Eligibility Prediction using Random Forest")
+
 # File uploader widget
 uploaded_file = st.file_uploader("Upload your loan_data_set.csv file", type=["csv"])
 
@@ -151,9 +154,6 @@ if uploaded_file is not None:
         # Step 6: Show the cleaned and transformed dataset
         st.write("### Final Cleaned and Transformed Dataset")
         st.write(df.head())  # Display the final cleaned dataset
-
-# Title of the Streamlit app
-st.title("Loan Eligibility Prediction using Random Forest")
 
         # Handle missing values
         st.write("### Handling Missing Values")
