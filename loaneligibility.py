@@ -102,7 +102,7 @@ if uploaded_file is not None:
         st.pyplot(fig7)
 
         # Drop the 'Loan_ID' column
-        if 'Loan_ID' in columns:
+        if 'Loan_ID' in df.columns:
             df = drop('Loan_ID', axis=1)
             st.write("### Dataset After Dropping 'Loan_ID' Column")
             st.write(df.head()) # Display the updated dataset
