@@ -27,83 +27,91 @@ def plot_distribution(df, column, title, bins=50):
     ax.set_ylabel("Frequency")
     st.pyplot(fig)
 
-# Helper function to encode categorical variables
-def encode_categorical_columns(df):
-    label_encoders = {}
-    for column in df.select_dtypes(include=['object']).columns:
-        le = LabelEncoder()
-        df[column] = le.fit_transform(df[column])
-        label_encoders[column] = le
-    return df, label_encoders
+# Helper function for count plots
+def plot_countplot(df, column, title):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.countplot(x=column, data=df, ax=ax)
+    ax.set_title(title)
+    ax.set_xlabel(column)
+    ax.set_ylabel("Count")
+    st.pyplot(fig)
 
-# Helper function for missing value handling
+# Helper function for handling missing values
 def handle_missing_values(df):
     imputer = SimpleImputer(strategy='most_frequent')
     return pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 
-# Helper function for evaluation metrics
-def evaluate_model(y_test, y_pred, model_name="Model"):
+# Helper function to train and evaluate models
+def train_and_evaluate_model(model, X_train, X_test, y_train, y_test, model_name="Model"):
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
     accuracy = accuracy_score(y_test, y_pred)
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
-    st.write(f"### {model_name} Evaluation Metrics")
+
+    st.write(f"### {model_name} Evaluation")
     st.write(f"Accuracy: {accuracy:.4f}")
     st.write(f"Recall: {recall:.4f}")
     st.write(f"F1 Score: {f1:.4f}")
     st.write(f"Precision: {precision:.4f}")
-    return accuracy, recall, f1, precision
 
-# File uploader widget
-uploaded_file = st.file_uploader("Upload your loan_data_set.csv file", type=["csv"])
+    cm = confusion_matrix(y_test, y_pred)
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=['Predicted No', 'Predicted Yes'],
+                yticklabels=['Actual No', 'Actual Yes'])
+    ax.set_title(f"Confusion Matrix ({model_name})")
+    ax.set_xlabel("Predicted")
+    ax.set_ylabel("Actual")
+    st.pyplot(fig)
+
+    return model
+
+# Streamlit app
+st.title("Loan Eligibility Prediction System")
+
+# File uploader
+uploaded_file = st.file_uploader("Upload your dataset (CSV)", type=["csv"])
 
 if uploaded_file:
     try:
-        # Load dataset
         df = pd.read_csv(uploaded_file)
-        display_dataset(df)
+        display_dataset(df, "Original Dataset Preview")
 
-        # Filter and visualize data
-        st.write("## Applicant Income Analysis")
-        plot_distribution(df[df['ApplicantIncome'] <= 40000], 'ApplicantIncome', "Applicant Income Distribution (Up to 40000)")
-
-        st.write("## Loan Amount Analysis")
-        plot_distribution(df, 'LoanAmount', "Loan Amount Distribution")
+        # Data Preprocessing
+        if 'Loan_ID' in df.columns:
+            df.drop('Loan_ID', axis=1, inplace=True)
 
         # Handle missing values
         df = handle_missing_values(df)
-        display_dataset(df, title="Dataset After Handling Missing Values")
 
-        # Encode categorical features
-        df, encoders = encode_categorical_columns(df)
-        display_dataset(df, title="Encoded Dataset")
-
-        # Define features and target
-        X = df.drop('Loan_Status', axis=1)
-        y = df['Loan_Status']
+        # Encode categorical columns
+        label_encoders = {}
+        for column in df.select_dtypes(include=['object']).columns:
+            le = LabelEncoder()
+            df[column] = le.fit_transform(df[column])
+            label_encoders[column] = le
 
         # Split data
+        X = df.drop('Loan_Status', axis=1)
+        y = df['Loan_Status']
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # Random Forest Model
-        rf_model = RandomForestClassifier(random_state=42)
-        rf_model.fit(X_train, y_train)
-        y_pred_rf = rf_model.predict(X_test)
-        evaluate_model(y_test, y_pred_rf, model_name="Random Forest")
+        # Random Forest
+        rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+        rf_model = train_and_evaluate_model(rf_model, X_train, X_test, y_train, y_test, "Random Forest")
 
-        # Logistic Regression Model
+        # Logistic Regression
         logreg_model = LogisticRegression(max_iter=1000, random_state=42)
-        logreg_model.fit(X_train, y_train)
-        y_pred_logreg = logreg_model.predict(X_test)
-        evaluate_model(y_test, y_pred_logreg, model_name="Logistic Regression")
+        logreg_model = train_and_evaluate_model(logreg_model, X_train, X_test, y_train, y_test, "Logistic Regression")
 
-        # Decision Tree Model
+        # Decision Tree
         dt_model = DecisionTreeClassifier(random_state=42)
-        dt_model.fit(X_train, y_train)
-        y_pred_dt = dt_model.predict(X_test)
-        evaluate_model(y_test, y_pred_dt, model_name="Decision Tree")
+        dt_model = train_and_evaluate_model(dt_model, X_train, X_test, y_train, y_test, "Decision Tree")
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
 else:
-    st.info("Please upload a CSV file to proceed.")
+    st.info("Please upload a dataset to proceed.")
