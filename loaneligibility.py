@@ -341,59 +341,28 @@ if uploaded_file is not None:
         # Preprocess the dataset
         # Handle missing values using most frequent strategy for categorical columns
         imputer = SimpleImputer(strategy='most_frequent')
-        data = pd.DataFrame(imputer.fit_transform(data), columns=data.columns)
+        df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 
         # Convert categorical variables to numeric using Label Encoding
         label_encoders = {}
-        for column in data.select_dtypes(include=['object']).columns:
+        for column in df.select_dtypes(include=['object']).columns:
             le = LabelEncoder()
-            data[column] = le.fit_transform(data[column])
+            df[column] = le.fit_transform(df[column])
             label_encoders[column] = le
 
         # Separate features (X) and target (y)
-        X = data.drop('Loan_Status', axis=1)  # 'Loan_Status' is the target variable
-        y = data['Loan_Status']  # Target variable
+        X = df.drop('Loan_Status', axis=1)  # 'Loan_Status' is the target variable
+        y = df['Loan_Status']  # Target variable
 
         # Split data into training and testing sets (80% train, 20% test)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # Initialize and train Logistic Regression model
-        lr_model = LogisticRegression(random_state=42)
-        lr_model.fit(X_train, y_train)
-
-        # Make predictions with Logistic Regression
-        y_pred_lr = lr_model.predict(X_test)
-
-        # Evaluate Logistic Regression model
-        accuracy_lr = accuracy_score(y_test, y_pred_lr)
-        recall_lr = recall_score(y_test, y_pred_lr)
-        f1_lr = f1_score(y_test, y_pred_lr)
-        precision_lr = precision_score(y_test, y_pred_lr)
-
-        st.write("### Logistic Regression Model Evaluation")
-        st.write(f"Accuracy: {accuracy_lr:.4f}")
-        st.write(f"Recall: {recall_lr:.4f}")
-        st.write(f"F1 Score: {f1_lr:.4f}")
-        st.write(f"Precision: {precision_lr:.4f}")
-
-        # Plot Confusion Matrix for Logistic Regression
-        cm_lr = confusion_matrix(y_test, y_pred_lr)
-        st.write("### Confusion Matrix for Logistic Regression")
-        fig_cm_lr, ax_cm_lr = plt.subplots(figsize=(8, 6))
-        sns.heatmap(cm_lr, annot=True, fmt='d', cmap='Blues',
-                    xticklabels=['Predicted No', 'Predicted Yes'],
-                    yticklabels=['Actual No', 'Actual Yes'])
-        ax_cm_lr.set_xlabel('Predicted')
-        ax_cm_lr.set_ylabel('Actual')
-        ax_cm_lr.set_title('Confusion Matrix for Logistic Regression')
-        st.pyplot(fig_cm_lr)
-
         # Initialize and train Decision Tree model
-        dt_model = DecisionTreeClassifier(random_state=42)
+        dt_model = LogisticRegression(random_state=42)
         dt_model.fit(X_train, y_train)
 
         # Make predictions with Decision Tree
-        y_pred_dt = dt_model.predict(X_test)
+        y_pred_lr = dt_model.predict(X_test)
 
         # Evaluate Decision Tree model
         accuracy_dt = accuracy_score(y_test, y_pred_dt)
