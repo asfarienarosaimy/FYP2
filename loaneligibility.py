@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, f1_score, precision_score, recall_score
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder
@@ -358,7 +359,7 @@ if uploaded_file is not None:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
         # Initialize and train Decision Tree model
-        dt_model = LogisticRegression(random_state=42)
+        dt_model = DecisionTreeClassifier(random_state=42)
         dt_model.fit(X_train, y_train)
 
         # Make predictions with Decision Tree
