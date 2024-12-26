@@ -261,7 +261,7 @@ if uploaded_file is not None:
         # Preprocess the dataset
         # Handle missing values
         imputer = SimpleImputer(strategy='most_frequent')  # Use 'most_frequent' for categorical columns
-        df = pd.DataFrame(imputer.fit_transform(df), columns=data.columns)
+        df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
 
         # Convert categorical variables to numeric using Label Encoding
         label_encoders = {}
@@ -437,7 +437,6 @@ if uploaded_file is not None:
         ax_importance.set_title('Feature Importance for Decision Tree')
         ax_importance.invert_yaxis()  # Most important feature at the top
         st.pyplot(fig_importance)
-
 
     except Exception as e:
         st.error(f"An error occurred while processing the data: {e}")
