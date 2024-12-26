@@ -111,7 +111,7 @@ if uploaded_file is not None:
         st.write("### Filling Missing Values")
         for column in df.columns:
            if df[column].isnull().any(): # Check if the column has any missing values
-               if pd.api.types.is_numeric _dtype(df[column]):
+               if pd.api.types.is_numeric_dtype(df[column]):
                    df[column] = df[column].fillna(df[column].median())
                else: # For non-numeric columns, use the most frequent value (mode) 
                    df[column] = df[column].fillna(df[column].mode()[0])
