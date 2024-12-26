@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Title of the application
-st.title("Loan Dataset Viewer")
+st.title("Loan Dataset Viewer and Preprocessing")
 
 # File uploader widget
 uploaded_file = st.file_uploader("Upload your loan_data_set.csv file", type=["csv"])
@@ -88,6 +88,64 @@ if uploaded_file is not None:
         ax7.set_xlabel('Education Level')
         ax7.set_ylabel('Count')
         st.pyplot(fig7)
+
+        # Drop the 'Loan_ID' column
+        if 'Loan_ID' in columns:
+            df = drop('Loan_ID', axis=1)
+            st.write("### Dataset After Dropping 'Loan_ID' Column")
+            st.write(df.head()) # Display the updated dataset
+        else:
+            st.warning("'Loan_ID' column not found in the dataset.")
+
+        # Check for empty values in each column
+        empty_values_per_column = df.isnull().sum()
+        st.write("### Missing Values per Column")
+        st.write(empty_values_per_column)  # Display missing values for each column
+
+        # Check for missing values before filling
+        missing_values_before = df.isnull().sum()
+        st.write("### Missing Values Before Filling")
+        st.write(missing_values_before) # Display the count of missing values for each column
+
+       # Fill missing values: for numeric columns, use median; for non-numeric, use mode
+       st.write("### Filling Missing Values")
+       for column in df.columns:
+           if df[column].isnull().any(): # Check if the column has any missing values
+               if pd.api.types.is_numeric _dtype(df[column]):
+                   df[column] = df[column].fillna(df[column].median())
+               else: # For non-numeric columns, use the most frequent value (mode) 
+                   df[column] = df[column].fillna(df[column].mode()[0])
+
+        st.write("Dataset after filling missing values:")
+        st.write(df.head())  # Display the updated dataset
+
+        # Step 3: Transform 'Married' column to numerical values
+        st.write("### Step 3: Transform 'Married' to Numerical")
+        married_mapping = {'Yes': 1, 'No': 0}  # Example mapping
+        df['Married'] = df['Married'].map(married_mapping)
+        df['Married'] = df['Married'].fillna(df['Married'].mode()[0]) # Fill NaN with the mode
+        st.write("After transformation of 'Married' column:")
+        st.write(df.head()) # Display the updated dataset
+
+        # Step 4: Transform 'Education' to numerical values
+        st.write("### Step 4: Transform 'Education' to Numerical")
+        education_mapping = {'Graduate': 1, 'Not Graduate': 0}  # Example mapping
+        df['Education'] = df['Education'].map(education_mapping)
+        df['Education'] = df['Education'].fillna(df['Education'].mode()[0])  # Fill NaN with the mode
+        st.write("After transformation of 'Education' column:")
+        st.write(df.head())  # Display the updated dataset
+
+        # Step 5: Transform 'Property_Area' to numerical values
+        st.write("### Step 5: Transform 'Property_Area' to Numerical")
+        property_area_mapping = {'Urban': 2, 'Semiurban': 1, 'Rural': 0}  # Example mapping
+        df['Property_Area'] = df['Property_Area'].map(property_area_mapping)
+        df['Property_Area'] = df['Property_Area'].fillna(df['Property_Area'].mode()[0])  # Fill NaN with the mode
+        st.write("After transformation of 'Property_Area' column:")
+        st.write(df.head())  # Display the updated dataset
+
+        # Step 6: Show the cleaned and transformed dataset
+        st.write("### Final Cleaned and Transformed Dataset")
+        st.write(df.head())  # Display the final cleaned dataset
 
     except Exception as e:
         st.error(f"An error occurred while processing the data: {e}")
