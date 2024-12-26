@@ -2,9 +2,17 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.model_selction import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, f1_score
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import LabelIncoder
 
 # Title of the application
 st.title("Loan Dataset Viewer and Preprocessing")
+
+# Title of the Streamlit app
+st.title("Loan Eligibility Prediction using Random Forest")
 
 # File uploader widget
 uploaded_file = st.file_uploader("Upload your loan_data_set.csv file", type=["csv"])
@@ -146,6 +154,103 @@ if uploaded_file is not None:
         # Step 6: Show the cleaned and transformed dataset
         st.write("### Final Cleaned and Transformed Dataset")
         st.write(df.head())  # Display the final cleaned dataset
+
+            # Handle missing values
+        st.write("### Handling Missing Values")
+        imputer = SimpleImputer(strategy='most_frequent')  # Use 'most_frequent' for categorical columns
+        df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
+        st.write("Missing values handled.")
+
+        # Convert categorical variables to numeric using Label Encoding
+        label_encoders = {}
+        for column in df.select_dtypes(include=['object']).columns:
+            le = LabelEncoder()
+            df[column] = le.fit_transform(df[column])
+            label_encoders[column] = le
+        st.write("Categorical variables converted to numeric.")
+
+        # Define features (X) and target variable (y)
+        X = df.drop('Loan_Status', axis=1)
+        y = df['Loan_Status']
+
+        # Split data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Initialize and train the Random Forest Classifier
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+        model.fit(X_train, y_train)
+
+        # Make predictions on the test set
+        y_pred = model.predict(X_test)
+
+        # Evaluate the model
+        accuracy = accuracy_score(y_test, y_pred)
+        st.write(f"### Model Accuracy: {accuracy:.2f}")
+
+        # Confusion Matrix
+        st.write("### Confusion Matrix")
+        cm = confusion_matrix(y_test, y_pred)
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Predicted N', 'Predicted Y'], yticklabels=['Actual N', 'Actual Y'])
+        plt.xlabel('Predicted')
+        plt.ylabel('Actual')
+        plt.title('Confusion Matrix')
+        st.pyplot(plt)
+
+        # Classification Report
+        st.write("### Classification Report")
+        report = classification_report(y_test, y_pred)
+        st.text(report)
+
+        # F1 Score
+        f1 = f1_score(y_test, y_pred)
+        st.write(f"### F1 Score: {f1:.2f}")
+
+        # Feature Importances
+        feature_importances = model.feature_importances_
+        feature_names = X.columns
+
+        # Create a DataFrame for better visualization
+        importance_df = pd.DataFrame({
+            'Feature': feature_names,
+            'Importance': feature_importances
+        }).sort_values(by='Importance', ascending=False)
+
+        st.write("### Feature Importances")
+        st.write(importance_df)
+
+        # Plot the feature importances
+        st.write("### Feature Importance Plot")
+        plt.figure(figsize=(10, 6))
+        plt.barh(importance_df['Feature'], importance_df['Importance'], color='green')
+        plt.xlabel('Importance')
+        plt.ylabel('Feature')
+        plt.title('Feature Importance (Random Forest)')
+        plt.gca().invert_yaxis()  # Show the most important feature at the top
+        st.pyplot(plt)
+
+        # Predict loan status for a new applicant
+        st.write("### Predict Loan Status for a New Applicant")
+        new_applicant = {
+            'Gender': 1,  # Example data: 1 for male, 0 for female
+            'Married': 1,  # Example data: 1 for married, 0 for not married
+            'Dependents': 2,  # Example data
+            'Education': 1,  # Example data: 1 for Graduate, 0 for Not Graduate
+            'Self_Employed': 0,  # Example data: 0 for No, 1 for Yes
+            'ApplicantIncome': 5000,
+            'CoapplicantIncome': 2000,
+            'LoanAmount': 100,
+            'Loan_Amount_Term': 360,
+            'Credit_History': 1,  # Example data: 1 for Good Credit History
+            'Property_Area': 1  # Example data: 1 for Semiurban
+        }
+        
+        new_applicant_df = pd.DataFrame(new_applicant, index=[0])
+        
+        # Make prediction
+        predicted_loan_status = model.predict(new_applicant_df)
+        loan_status = 'Approved' if predicted_loan_status[0] == 1 else 'Rejected'
+        st.write(f"Predicted Loan Status: {loan_status}")
 
     except Exception as e:
         st.error(f"An error occurred while processing the data: {e}")
