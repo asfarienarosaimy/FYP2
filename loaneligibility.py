@@ -376,4 +376,3 @@ if uploaded_file is not None:
 
         fig_importance, ax_importance = plt.subplots(figsize=(10, 6))
         ax_importance.barh(importance_df['Feature'], importance_df['Importance'], color='orange')
-
