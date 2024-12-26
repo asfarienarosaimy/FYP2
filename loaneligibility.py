@@ -20,12 +20,14 @@ else:
     st.info("Please upload a CSV file to proceed.")
 
 # Filter data for Applicant Income <= 40000
-        df = df[df['ApplicantIncome'] <= 40000]
+        df = df[df['ApplicantIncome'] <= 40000] # Properly aligned with parent block
 
         st.write("### Filtered Dataset (Applicant Income ≤ 40000)")
         st.write(df.head())  # Display the first few rows of the filtered dataset
+except Exception as e:
+        st.error(f"An error occured: {e}")
 
-        # Plot histogram
+# Plot histogram
         st.write("### Distribution of Applicant Income (Up to 40000)")
         fig, ax = plt.subplots()
         df['ApplicantIncome'].hist(bins=50, ax=ax)
