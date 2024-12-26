@@ -107,9 +107,9 @@ if uploaded_file is not None:
         st.write("### Missing Values Before Filling")
         st.write(missing_values_before) # Display the count of missing values for each column
 
-       # Fill missing values: for numeric columns, use median; for non-numeric, use mode
-       st.write("### Filling Missing Values")
-       for column in df.columns:
+        # Fill missing values: for numeric columns, use median; for non-numeric, use mode
+        st.write("### Filling Missing Values")
+        for column in df.columns:
            if df[column].isnull().any(): # Check if the column has any missing values
                if pd.api.types.is_numeric _dtype(df[column]):
                    df[column] = df[column].fillna(df[column].median())
