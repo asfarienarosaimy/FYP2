@@ -25,9 +25,9 @@ with st.form("loan_form"):
     self_employed = st.selectbox("Self Employed:", ["No", "Yes"], index=0)
     
     st.subheader("Financial Information")
-    applicant_income = st.number_input("Applicant Income (USD):", min_value=0, value=0, step=100)
-    coapplicant_income = st.number_input("Coapplicant Income (USD):", min_value=0, value=0, step=100)
-    loan_amount = st.number_input("Loan Amount (USD):", min_value=0, value=0, step=100)
+    applicant_income = st.number_input("Applicant Income (RM):", min_value=0, value=0, step=100)
+    coapplicant_income = st.number_input("Coapplicant Income (RM):", min_value=0, value=0, step=100)
+    loan_amount = st.number_input("Loan Amount (RM):", min_value=0, value=0, step=100)
     loan_amount_term = st.number_input("Loan Amount Term (months):", min_value=0, value=360, step=1)
     
     st.subheader("Credit and Property Details")
@@ -64,9 +64,9 @@ if submit_button:
     # Detailed Interpretation
     st.subheader("Detailed Analysis")
     st.write("The prediction is based on the following considerations:")
-    st.write(f"- Applicant Income: {applicant_income} USD")
-    st.write(f"- Loan Amount: {loan_amount} USD")
+    st.write(f"- Applicant Income: {applicant_income} RM")
+    st.write(f"- Loan Amount: {loan_amount} RM")
     st.write(f"- Credit History: {'Good' if credit_history == 'Yes' else 'Poor'}")
     st.write(f"- Loan Term: {loan_amount_term} months")
     st.write(f"- Property Area: {property_area}")
-    st.write("These factors are evaluated to determine the loan eligibility score and final decision.")
+    st.write("These factors are evaluated to determine the loan eligibility score and final decision.")
