@@ -25,9 +25,9 @@ with st.form("loan_form"):
     self_employed = st.selectbox("Self Employed:", ["No", "Yes"], index=0)
     
     st.subheader("Financial Information")
-    applicant_income = st.number_input("Applicant Income (RM):", min_value=0, value=0, step=100)
-    coapplicant_income = st.number_input("Coapplicant Income (RM):", min_value=0, value=0, step=100)
-    loan_amount = st.number_input("Loan Amount (RM):", min_value=0, value=0, step=100)
+    applicant_income = st.number_input("Applicant Income (RM) (1 year = 12 months):", min_value=0, value=0, step=100)
+    coapplicant_income = st.number_input("Coapplicant Income (RM) (1 year = 12 months):", min_value=0, value=0, step=100)
+    loan_amount = st.number_input("Loan Amount (RM) (5 year = 60 months, 10 year = 120 months):", min_value=0, value=0, step=100)
     loan_amount_term = st.number_input("Loan Amount Term (months):", min_value=0, value=360, step=1)
     
     st.subheader("Credit and Property Details")
