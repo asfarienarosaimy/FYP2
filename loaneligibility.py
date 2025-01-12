@@ -11,6 +11,25 @@ def predict_loan_eligibility(input_data):
     eligibility = "Eligible" if score > 0.5 and input_data['Credit History'] == 1 else "Not Eligible"
     return eligibility, score
 
+# CSS for background image
+page_bg_img = """
+<style>
+[data-testid="stAppViewContainer"] {
+    background-image: url("image.png");
+    background-size: no-repeat;
+    background-attachment: fixed;
+}
+[data-testid="stSidebar"] {
+    background: rgba(255, 255, 255, 0.8);
+}
+[data-testid="stHeader"], .css-1y4p8pa {
+    background: rgba(0, 0, 0, 0.5);
+}
+</style>
+"""
+
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
 # Streamlit UI
 st.title("Loan Eligibility Prediction Dashboard")
 st.write("This tool helps predict loan eligibility based on user-provided information. Enter your details below to get a detailed analysis and prediction.")
