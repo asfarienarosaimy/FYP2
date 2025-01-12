@@ -4,23 +4,40 @@ import pickle  # Use to load the trained ML model
 import base64
 
 # Function to encode the image in Base64
-def add_background_image(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded_image = base64.b64encode(image_file.read()).decode()
-    background_style = f"""
+import streamlit as st
+import base64
+
+# Function to encode the image in Base64
+def add_background_image_with_blur(image_file, blur_intensity=5):
+    """
+    Adds a blurred background image to the Streamlit app.
+    :param image_file: Path to the image file (PNG or JPG).
+    :param blur_intensity: Intensity of the blur effect (default is 5px).
+    """
+    with open(image_file, "rb") as image:
+        encoded_image = base64.b64encode(image.read()).decode()
+    
+    page_bg_img = f"""
     <style>
-    [data-testid="stAppViewContainer"] {{
-        background-image: url("data:image/png;base64,{encoded_image}");
+    body {{
+        background-image: url("data:image/jpg;base64,{encoded_image}");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
+        filter: blur({blur_intensity}px);
+    }}
+    .stApp {{
+        background: rgba(255, 255, 255, 0.5); /* Adds a semi-transparent overlay for readability */
+        backdrop-filter: blur(2px); /* Optionally blur the app content slightly */
     }}
     </style>
     """
-    st.markdown(background_style, unsafe_allow_html=True)
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
 
 # Add your background image here
-add_background_image("background loan.jpg")  # Replace 'image.png' with the actual path to your image
+add_background_image_with_blur("image.jpg", blur_intensity=10)  # Set blur intensity as needed
+
 
 # Load the trained machine learning model
 # model = pickle.load(open("model.pkl", "rb"))
