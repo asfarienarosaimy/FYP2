@@ -60,7 +60,7 @@ if submit_button:
     st.subheader("Prediction Result")
     st.write(f"*Eligibility:* {prediction}")
     st.write(f"*Score:* {score:.2f}")
-    
+
     # Detailed Interpretation
     st.subheader("Detailed Analysis")
     st.write("The prediction is based on the following considerations:")
@@ -69,4 +69,25 @@ if submit_button:
     st.write(f"- Credit History: {'Good' if credit_history == 'Yes' else 'Poor'}")
     st.write(f"- Loan Term: {loan_amount_term} months")
     st.write(f"- Property Area: {property_area}")
+
+    # Additional details on eligibility
+    if prediction == "Not Eligible":
+        st.subheader("Reason for Ineligibility")
+        reasons = []
+        if score <= 0.5:
+            reasons.append("The income-to-loan ratio is too low.")
+        if credit_history == "No":
+            reasons.append("The credit history is poor or unavailable.")
+        if not reasons:
+            reasons.append("Other factors may have contributed to ineligibility.")
+        for reason in reasons:
+            st.write(f"- {reason}")
+    else:
+        st.subheader("Factors Supporting Eligibility")
+        st.write("The following factors contributed to eligibility:")
+        st.write(f"- Sufficient income-to-loan ratio with a score of {score:.2f}.")
+        if credit_history == "Yes":
+            st.write("- A good credit history.")
+        st.write("- Other positive financial or property-related factors.")
+
     st.write("These factors are evaluated to determine the loan eligibility score and final decision.")
