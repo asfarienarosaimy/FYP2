@@ -20,7 +20,7 @@ def add_background_image(image_path):
     st.markdown(background_style, unsafe_allow_html=True)
 
 # Add your background image here
-add_background_image("background load.jpg") 
+add_background_image("background loan.jpg") 
 
 # Load the trained machine learning model
 # model = pickle.load(open("model.pkl", "rb"))
