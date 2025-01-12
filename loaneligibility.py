@@ -36,7 +36,7 @@ def add_background_image_with_blur(image_file, blur_intensity=5):
 
 
 # Add your background image here
-add_background_image_with_blur("image.jpg", blur_intensity=10)  # Set blur intensity as needed
+add_background_image_with_blur("image.jpg")  # Set blur intensity as needed
 
 
 # Load the trained machine learning model
