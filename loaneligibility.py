@@ -3,6 +3,25 @@ import pandas as pd
 import pickle  # Use to load the trained ML model
 import base64
 
+# Function to encode the image in Base64
+def add_background_image(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode()
+    background_style = f"""
+    <style>
+    [data-testid="stAppViewContainer"] {{
+        background-image: url("data:image/png;base64,{encoded_image}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    </style>
+    """
+    st.markdown(background_style, unsafe_allow_html=True)
+
+# Add your background image here
+add_background_image("background loan.jpg")  # Replace 'image.png' with the actual path to your image
+
 # Load the trained machine learning model
 # model = pickle.load(open("model.pkl", "rb"))
 # For demonstration, we'll use a placeholder for the prediction function
@@ -11,29 +30,6 @@ def predict_loan_eligibility(input_data):
     score = input_data['Applicant Income'] / (input_data['Loan Amount'] + 1)  # Avoid division by zero
     eligibility = "Eligible" if score > 0.5 and input_data['Credit History'] == 1 else "Not Eligible"
     return eligibility, score
-
-# Function to add background image
-def add_background(image_file):
-    with open(image_file, "rb") as f:
-        encoded_image = base64.b64encode(f.read()).decode()
-    page_bg_img = f"""
-    <style>
-    [data-testid="stAppViewContainer"] {{
-        background-image: url("data:image/png;base64,{encoded_image}");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }}
-    [data-testid="stSidebar"] > div:first-child {{
-        background-color: rgba(255, 255, 255, 0.5);  /* Optional: to make the sidebar semi-transparent */
-    }}
-    </style>
-    """
-
-st.markdown(page_bg_img, unsafe_allow_html=True)
-
-# Call the function with your image file
-add_background("FYP2/background loan.jpg")  # Replace with your image file path
 
 # Streamlit UI
 st.title("Loan Eligibility Prediction Dashboard")
