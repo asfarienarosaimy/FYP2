@@ -15,7 +15,7 @@ def predict_loan_eligibility(input_data):
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background-image: url("image.png");
+    background-image: url("background loan.jpg");
     background-size: no-repeat;
     background-attachment: fixed;
 }
