@@ -33,7 +33,7 @@ def add_background(image_file):
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
 # Call the function with your image file
-add_background("background.png")  # Replace with your image file path
+add_background("background loan.jpg")  # Replace with your image file path
 
 # Streamlit UI
 st.title("Loan Eligibility Prediction Dashboard")
