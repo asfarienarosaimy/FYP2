@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle  # Use to load the trained ML model
+import base64
 
 # Load the trained machine learning model
 # model = pickle.load(open("model.pkl", "rb"))
@@ -11,24 +12,28 @@ def predict_loan_eligibility(input_data):
     eligibility = "Eligible" if score > 0.5 and input_data['Credit History'] == 1 else "Not Eligible"
     return eligibility, score
 
-# CSS for background image
-page_bg_img = """
-<style>
-[data-testid="stAppViewContainer"] {
-    background-image: url("background loan.jpg");
-    background-size: no-repeat;
-    background-attachment: fixed;
-}
-[data-testid="stSidebar"] {
-    background: rgba(255, 255, 255, 0.8);
-}
-[data-testid="stHeader"], .css-1y4p8pa {
-    background: rgba(0, 0, 0, 0.5);
-}
-</style>
-"""
+# Function to add background image
+def add_background(image_file):
+    with open(image_file, "rb") as f:
+        encoded_image = base64.b64encode(f.read()).decode()
+    page_bg_img = f"""
+    <style>
+    [data-testid="stAppViewContainer"] {{
+        background-image: url("data:image/png;base64,{encoded_image}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    [data-testid="stSidebar"] > div:first-child {{
+        background-color: rgba(255, 255, 255, 0.5);  /* Optional: to make the sidebar semi-transparent */
+    }}
+    </style>
+    """
 
 st.markdown(page_bg_img, unsafe_allow_html=True)
+
+# Call the function with your image file
+add_background("background.png")  # Replace with your image file path
 
 # Streamlit UI
 st.title("Loan Eligibility Prediction Dashboard")
