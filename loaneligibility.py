@@ -15,29 +15,26 @@ def predict_loan_eligibility(input_data):
 st.title("Loan Eligibility Prediction Dashboard")
 st.write("This tool helps predict loan eligibility based on user-provided information. Enter your details below to get a detailed analysis and prediction.")
 
-# User Input Form
-with st.form("loan_form"):
-    st.subheader("Applicant Information")
-    gender = st.selectbox("Gender:", ["Male", "Female"], index=0)
-    marital_status = st.selectbox("Marital Status:", ["Married", "Single"], index=1)
-    dependents = st.selectbox("Number of Dependents:", ["0", "1", "2", "3+"], index=0)
-    education = st.selectbox("Education Level:", ["Graduate", "Not Graduate"], index=0)
-    self_employed = st.selectbox("Self Employed:", ["No", "Yes"], index=0)
-    
-    st.subheader("Financial Information")
-    applicant_income = st.number_input("Applicant Income (RM) (1 year = 12 months):", min_value=0, value=0, step=100)
-    coapplicant_income = st.number_input("Coapplicant Income (RM) (1 year = 12 months):", min_value=0, value=0, step=100)
-    loan_amount = st.number_input("Loan Amount (RM) (5 year = 60 months, 10 year = 120 months):", min_value=0, value=0, step=100)
-    loan_amount_term = st.number_input("Loan Amount Term (months):", min_value=0, value=360, step=1)
-    
-    st.subheader("Credit and Property Details")
-    credit_history = st.selectbox("Credit History:", ["No", "Yes"], index=1)
-    property_area = st.selectbox("Property Area:", ["Urban", "Semiurban", "Rural"], index=0)
+# User Input Sections
+st.subheader("1. Applicant Information")
+gender = st.radio("Gender:", ["Male", "Female"], index=0)
+marital_status = st.radio("Marital Status:", ["Married", "Single"], index=1)
+dependents = st.radio("Number of Dependents:", ["0", "1", "2", "3+"], index=0)
+education = st.radio("Education Level:", ["Graduate", "Not Graduate"], index=0)
+self_employed = st.radio("Self Employed:", ["No", "Yes"], index=0)
 
-    submit_button = st.form_submit_button(label="Predict")
+st.subheader("2. Financial Information")
+applicant_income = st.number_input("Applicant Income (RM):", min_value=0, value=0, step=100)
+coapplicant_income = st.number_input("Coapplicant Income (RM):", min_value=0, value=0, step=100)
+loan_amount = st.number_input("Loan Amount (RM):", min_value=0, value=0, step=100)
+loan_amount_term = st.radio("Loan Amount Term:", ["12 months (1 year)", "60 months (5 years)", "120 months (10 years)", "360 months (30 years)"], index=3)
+
+st.subheader("3. Credit and Property Details")
+credit_history = st.radio("Credit History:", ["No", "Yes"], index=1)
+property_area = st.radio("Property Area:", ["Urban", "Semiurban", "Rural"], index=0)
 
 # Process input and show prediction
-if submit_button:
+if st.button("Predict"):
     # Convert inputs into the format required by the model
     input_data = {
         "Gender": 1 if gender == "Male" else 0,
@@ -48,7 +45,7 @@ if submit_button:
         "Applicant Income": applicant_income,
         "Coapplicant Income": coapplicant_income,
         "Loan Amount": loan_amount,
-        "Loan Amount Term": loan_amount_term,
+        "Loan Amount Term": int(loan_amount_term.split()[0]),
         "Credit History": 1 if credit_history == "Yes" else 0,
         "Property Area": ["Urban", "Semiurban", "Rural"].index(property_area),
     }
@@ -63,31 +60,15 @@ if submit_button:
 
     # Detailed Interpretation
     st.subheader("Detailed Analysis")
-    st.write("The prediction is based on the following considerations:")
-    st.write(f"- Applicant Income: {applicant_income} RM")
-    st.write(f"- Loan Amount: {loan_amount} RM")
-    st.write(f"- Credit History: {'Good' if credit_history == 'Yes' else 'Poor'}")
-    st.write(f"- Loan Term: {loan_amount_term} months")
-    st.write(f"- Property Area: {property_area}")
-
-    # Additional details on eligibility
     if prediction == "Not Eligible":
-        st.subheader("Reason for Ineligibility")
-        reasons = []
+        st.write("The loan application is **Not Eligible** due to the following reasons:")
         if score <= 0.5:
-            reasons.append("The income-to-loan ratio is too low.")
+            st.write("- Low income-to-loan ratio.")
         if credit_history == "No":
-            reasons.append("The credit history is poor or unavailable.")
-        if not reasons:
-            reasons.append("Other factors may have contributed to ineligibility.")
-        for reason in reasons:
-            st.write(f"- {reason}")
+            st.write("- Poor credit history.")
+        st.write("- Other factors might include high loan amount or insufficient income.")
     else:
-        st.subheader("Factors Supporting Eligibility")
-        st.write("The following factors contributed to eligibility:")
-        st.write(f"- Sufficient income-to-loan ratio with a score of {score:.2f}.")
-        if credit_history == "Yes":
-            st.write("- A good credit history.")
-        st.write("- Other positive financial or property-related factors.")
-
-    st.write("These factors are evaluated to determine the loan eligibility score and final decision.")
+        st.write("The loan application is **Eligible** due to the following reasons:")
+        st.write("- Sufficient income-to-loan ratio.")
+        st.write("- Good credit history.")
+        st.write("- Favorable property area and financial details.")
