@@ -106,3 +106,17 @@ if score > 0.5:
     st.write("This indicates that the applicant has a sufficient income relative to the loan amount and/or a favorable credit history.")
 else:
     st.write("This indicates that the applicant's income may not be sufficient relative to the loan amount and/or has an unfavorable credit history.")
+
+# Calculate and show estimated monthly payment
+loan_term_years = int(loan_amount_term.split()[0]) / 12
+monthly_payment = loan_amount / loan_term_years
+st.write(f"Estimated Monthly Payment: RM{monthly_payment:.2f}")
+
+# Provide advice based on income-to-loan ratio
+income_to_loan_ratio = applicant_income / (loan_amount + 1)
+st.write(f"Your income-to-loan ratio is {income_to_loan_ratio:.2f}.")
+if income_to_loan_ratio < 0.1:
+    st.write("Warning: Your income-to-loan ratio is very low, which may affect eligibility.")
+elif income_to_loan_ratio > 0.5:
+    st.write("Your income-to-loan ratio is excellent, which increases eligibility.")
+
