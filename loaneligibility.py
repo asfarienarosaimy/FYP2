@@ -92,3 +92,17 @@ if st.button("Predict"):
         st.write("- Sufficient income-to-loan ratio.")
         st.write("- Good credit history.")
         st.write("- Favorable property area and financial details.")
+
+# Explain the score
+st.subheader("Score Explanation")
+st.write("The score is calculated as a ratio of the applicant's income to the loan amount, adjusted by other factors.")
+st.write(f"- **Applicant Income:** RM{applicant_income}")
+st.write(f"- **Loan Amount:** RM{loan_amount}")
+st.write(f"- **Credit History:** {'Good' if credit_history == 'Yes' else 'Poor'}")
+st.write(f"- **Income-to-Loan Ratio:** {applicant_income / (loan_amount + 1):.2f}")
+if coapplicant_income > 0:
+    st.write(f"- **Coapplicant Income Contribution:** RM{coapplicant_income}")
+if score > 0.5:
+    st.write("This indicates that the applicant has a sufficient income relative to the loan amount and/or a favorable credit history.")
+else:
+    st.write("This indicates that the applicant's income may not be sufficient relative to the loan amount and/or has an unfavorable credit history.")
