@@ -3,11 +3,11 @@ import pandas as pd
 import pickle  # Use to load the trained ML model
 import base64
 
-# Function to encode the image in Base64
-def add_background_image(image_path):
+# Function to encode the image in Base64 and add custom styles
+def add_custom_styles(image_path):
     with open(image_path, "rb") as image_file:
         encoded_image = base64.b64encode(image_file.read()).decode()
-    background_style = f"""
+    custom_styles = f"""
     <style>
     [data-testid="stAppViewContainer"] {{
         background-image: url("data:image/png;base64,{encoded_image}");
@@ -15,12 +15,29 @@ def add_background_image(image_path):
         background-repeat: no-repeat;
         background-attachment: fixed;
     }}
+    h1, h2, h3, h4, h5, h6 {{
+        color: #333333;  /* Darker color for headings */
+        font-weight: bold;  /* Make headings bold */
+    }}
+    p {{
+        color: #444444;  /* Slightly lighter color for body text */
+        font-size: 16px;  /* Larger font size for better readability */
+    }}
+    .stRadio label {{
+        font-size: 14px;  /* Increase font size for radio labels */
+    }}
+    .stButton>button {{
+        font-size: 16px;  /* Increase font size for buttons */
+        background-color: #4CAF50;  /* Green button background */
+        color: white;  /* White text on buttons */
+        border-radius: 8px;  /* Rounded corners for buttons */
+    }}
     </style>
     """
-    st.markdown(background_style, unsafe_allow_html=True)
+    st.markdown(custom_styles, unsafe_allow_html=True)
 
-# Add your background image here
-add_background_image("loan image.jpg") 
+# Add your background image and custom styles here
+add_custom_styles("loan image.jpg") 
 
 # Load the trained machine learning model
 # model = pickle.load(open("model.pkl", "rb"))
@@ -119,4 +136,3 @@ if income_to_loan_ratio < 0.1:
     st.write("Warning: Your income-to-loan ratio is very low, which may affect eligibility.")
 elif income_to_loan_ratio > 0.5:
     st.write("Your income-to-loan ratio is excellent, which increases eligibility.")
-
