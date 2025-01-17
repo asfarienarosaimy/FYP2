@@ -55,8 +55,9 @@ st.write("This tool helps predict loan eligibility based on user-provided inform
 
 with st.sidebar:
     st.markdown('Menu Navigation')
-    eda = st.Page('loaneligibility.py', title='EDA', icon='📊')
-    predict = st.Page('prediction.py', title='Prediction Loan', icon='')
+
+eda = st.Page('loaneligibility.py', title='EDA', icon='📊')
+predict = st.Page('prediction.py', title='Prediction Loan', icon='')
 
 
 
