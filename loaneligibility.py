@@ -60,6 +60,9 @@ with st.sidebar:
 
 
 
+
+
+
 # User Input Sections
 st.subheader("1. Applicant Information")
 gender = st.radio("Gender:", ["Male", "Female"], index=0)
@@ -144,3 +147,11 @@ if income_to_loan_ratio < 0.1:
     st.write("Warning: Your income-to-loan ratio is very low, which may affect eligibility.")
 elif income_to_loan_ratio > 0.5:
     st.write("Your income-to-loan ratio is excellent, which increases eligibility.")
+
+
+
+pg = st.navigation(
+    {"Menu": [predict,eda]}
+)
+
+pg.run
