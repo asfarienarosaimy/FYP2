@@ -52,6 +52,14 @@ def predict_loan_eligibility(input_data):
 st.title("Loan Eligibility Prediction Dashboard")
 st.write("This tool helps predict loan eligibility based on user-provided information. Enter your details below to get a detailed analysis and prediction.")
 
+
+with st.sidebar:
+    st.markdown('Menu Navigation')
+    eda = st.Page('loaneligibility.py', title='EDA', icon='📊')
+    predict = st.Page('prediction.py', title='Prediction Loan', icon='')
+
+
+
 # User Input Sections
 st.subheader("1. Applicant Information")
 gender = st.radio("Gender:", ["Male", "Female"], index=0)
