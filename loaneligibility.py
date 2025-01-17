@@ -154,4 +154,4 @@ pg = st.navigation(
     {"Menu": [predict,eda]}
 )
 
-pg.run
+pg.run()
