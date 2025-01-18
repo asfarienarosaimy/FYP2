@@ -30,9 +30,6 @@ def predict():
     data= pd.DataFrame([col],columns=columns)
     prediction= model.predict(data)[0]
 
-    st.write(f"Prediction: {prediction}")
-    st.write(data)
-
     if prediction == 1:
         st.success('🎉 Congratulations! You can get the loan. :thumbsup:')
     else:
