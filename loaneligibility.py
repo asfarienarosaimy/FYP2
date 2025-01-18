@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import joblib
 
-
 model= joblib.load('lr_model.joblib')
 
 st.title('Loan Eligibility Prediction:bank:')
@@ -33,9 +32,9 @@ def predict():
 
 
     if prediction == 1:
-        st.success('You Can Get The Loan:thumbsup:')
+        st.success('🎉 Congratulations! You can get the loan. :thumbsup:')
     else:
-        st.error('Sorry You Cant Get The Loan:thumbsdown:')
+        st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
 
 
 m = st.markdown("""
