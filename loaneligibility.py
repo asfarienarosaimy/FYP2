@@ -25,6 +25,8 @@ Property_Area= st.selectbox('Area of Property',('Urban','Rural','Semiurban'))
 
 columns= ['Gender','Married','Dependents','Education','Self_Employed','ApplicantIncome','CoapplicantIncome',
           'LoanAmount','Loan_Amount_Term','Credit_History','Property_Area']
+
+submit_button = st.form_submit_button(label="Predict")
   
 def predict():
     col= np.array([Gender,Married,Dependents,Education,Self_Employed,
@@ -36,40 +38,3 @@ def predict():
         st.success('🎉 Congratulations! You can get the loan. :thumbsup:')
     else:
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
-
-submit_button = st.form_submit_button(label="Predict")
-
-# Process input and show prediction
-if submit_button:
-    # Convert inputs into the format required by the model
-    input_data = {
-        "Gender": 1 if Gender == "Male" else 0,
-        "Married": 1 if Married == "Married" else 0,
-        "Dependents": 3 if Dependents == "3+" else int(dependents),
-        "Education": 1 if Education == "Graduate" else 0,
-        "Self_Employed": 1 if Self_Employed == "Yes" else 0,
-        "ApplicantIncome": ApplicantIncome,
-        "CoapplicantIncome": CoapplicantIncome,
-        "LoanAmount": LoanAmount,
-        "Loan_Amount_Term": Loan_Amount_Term,
-        "Credit_History": 1 if Credit_History == "Yes" else 0,
-        "Property_Area": ["Urban", "Semiurban", "Rural"].index(Property_Area),
-    }
-
-    # Predict using the loaded model
-    prediction, score = predict_loan_eligibility(input_data)
-
-    # Display the result
-    st.subheader("Prediction Result")
-    st.write(f"Eligibility: {prediction}")
-    st.write(f"Score: {score:.2f}")
-    
-    # Detailed Interpretation
-    st.subheader("Detailed Analysis")
-    st.write("The prediction is based on the following considerations:")
-    st.write(f"- Applicant Income: {applicant_income} RM")
-    st.write(f"- Loan Amount: {loan_amount} RM")
-    st.write(f"- Credit History: {'Good' if credit_history == 'Yes' else 'Poor'}")
-    st.write(f"- Loan Term: {loan_amount_term} months")
-    st.write(f"- Property Area: {property_area}")
-    st.write("These factors are evaluated to determine the loan eligibility score and final decision.")
