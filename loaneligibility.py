@@ -96,5 +96,6 @@ div.stButton > button:hover {
 
 
 st.button('Predict',on_click=predict)
+st.pyplot(fig)
 
 plot_feature_importance()
