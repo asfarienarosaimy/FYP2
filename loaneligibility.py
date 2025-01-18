@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
-import matplotlib.pyplot as plt
 
 model= joblib.load('lr_model.joblib')
 
@@ -60,27 +59,6 @@ def predict():
         st.success('🎉 Congratulations! You can get the loan. :thumbsup:')
     else:
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
-
-def plot_feature_importance():
-  st.subheader("Feature Importance Visualization")
-  st.write("The chart below shows the overall importance of each fetaure in determining loan eligibility:")
-
-  try:
-      feature_importance = model.feature_importances_
-      importance_df = pd.DataFrame({
-        'Feature': columns,
-        'Importance': feature_importance
-      }).sort_values(by='Importance', ascending=False)
-
-      fig, ax = plt.subplots()
-      ax.barh(importance_df['Feature'], importance_df['Importance'], color='skyblue')
-      ax.set_xlabel('Importance Score')
-      ax.set_ylabel('Feature')
-      ax.set_title('Feature Importance')
-      plt.tight_layout()
-      st.pyplot(fig)
-  except AttributeError:
-      st.error("Feature importance is not available for this model.")
 
 m = st.markdown("""
 <style>
