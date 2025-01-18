@@ -37,17 +37,17 @@ def predict():
     else:
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
 
+    # Assuming 'model' is your GridSearchCV object
+    best_model = model.best_estimator_  # Get the best model from GridSearchCV
+
     # SHAP Explanation
-    explainer = shap.Explainer(model, data)  # Create the SHAP explainer
+    explainer = shap.Explainer(best_model, data)  # Create the SHAP explainer
     shap_values = explainer(data)  # Calculate SHAP values for the input
 
     st.subheader("Key Factors Contributing to the Decision")
     st.write("Below is a SHAP explanation of the factors influencing your loan eligibility decision:")
 
-    # Visualize SHAP values using a waterfall plot
-    fig, ax = plt.subplots()
-    shap.plots.waterfall(shap_values[0], show=False)  # For single prediction
-    plt.tight_layout()
-    st.pyplot(fig)
+    # You can now visualize the SHAP values
+    shap.summary_plot(shap_values, data)
 
 st.button('Predict',on_click=predict)
