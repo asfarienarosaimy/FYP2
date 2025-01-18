@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+import shap
+import matplotlib.pyplot as plt
 
 model= joblib.load('lr_model.joblib')
 
