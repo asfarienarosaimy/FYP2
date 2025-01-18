@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
+import shap
+import matplotlib.pyplot as plt
 
 model= joblib.load('lr_model.joblib')
 
@@ -35,17 +37,17 @@ def predict():
     else:
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
 
-m = st.markdown("""
-<style>
-div.stButton > button:first-child {
-    background-color: #0099ff;
-    color:#ffffff;
-}
-div.stButton > button:hover {
-    background-color: #00ff00;
-    color:#ff0000;
-    }
-</style>""", unsafe_allow_html=True)
+    # SHAP Explanation
+    explainer = shap.Explainer(model, data)  # Create the SHAP explainer
+    shap_values = explainer(data)  # Calculate SHAP values for the input
 
+    st.subheader("Key Factors Contributing to the Decision")
+    st.write("Below is a SHAP explanation of the factors influencing your loan eligibility decision:")
+
+    # Visualize SHAP values using a waterfall plot
+    fig, ax = plt.subplots()
+    shap.plots.waterfall(shap_values[0], show=False)  # For single prediction
+    plt.tight_layout()
+    st.pyplot(fig)
 
 st.button('Predict',on_click=predict)
