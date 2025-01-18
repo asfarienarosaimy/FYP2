@@ -49,5 +49,3 @@ div.stButton > button:hover {
 
 
 st.button('Predict',on_click=predict)
-
-plot_feature_importance()
