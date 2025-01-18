@@ -25,8 +25,6 @@ Property_Area= st.selectbox('Area of Property',('Urban','Rural','Semiurban'))
 
 columns= ['Gender','Married','Dependents','Education','Self_Employed','ApplicantIncome','CoapplicantIncome',
           'LoanAmount','Loan_Amount_Term','Credit_History','Property_Area']
-
-st.button('Predict',on_click=predict)
   
 def predict():
     col= np.array([Gender,Married,Dependents,Education,Self_Employed,
@@ -38,3 +36,5 @@ def predict():
         st.success('🎉 Congratulations! You can get the loan. :thumbsup:')
     else:
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
+
+st.button('Predict',on_click=predict)
