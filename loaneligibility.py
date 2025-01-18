@@ -26,7 +26,7 @@ Property_Area= st.selectbox('Area of Property',('Urban','Rural','Semiurban'))
 columns= ['Gender','Married','Dependents','Education','Self_Employed','ApplicantIncome','CoapplicantIncome',
           'LoanAmount','Loan_Amount_Term','Credit_History','Property_Area']
 
-submit_button = st.form_submit_button(label="Predict")
+st.button('Predict',on_click=predict)
   
 def predict():
     col= np.array([Gender,Married,Dependents,Education,Self_Employed,
