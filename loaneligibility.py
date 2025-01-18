@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
-import matplotlib.pyplot as plt
 
 model= joblib.load('lr_model.joblib')
 
@@ -24,28 +23,6 @@ Property_Area= st.selectbox('Area of Property',('Urban','Rural','Semiurban'))
 
 columns= ['Gender','Married','Dependents','Education','Self_Employed','ApplicantIncome','CoapplicantIncome',
           'LoanAmount','Loan_Amount_Term','Credit_History','Property_Area']
-
-def show_suggestions(data):
-    st.subheader("Suggestions for Improvement")
-    st.write("Based on your inputs, here are some suggestions to improve your loan eligibility:")
-
-    suggestions = []
-    if data['Credit_History'][0] == 0:
-        suggestions.append("Build a positive credit history by repaying debts on time.")
-    if data['ApplicantIncome'][0] < 3000:
-        suggestions.append("Increase your income or show proof of additional income sources.")
-    if data['CoapplicantIncome'][0] < 2000:
-        suggestions.append("Consider applying with a co-applicant who has a higher income.")
-    if data['LoanAmount'][0] > 200:
-        suggestions.append("Request a smaller loan amount if possible.")
-    if data['Loan_Amount_Term'][0] == '40 YEARS':
-        suggestions.append("Select a shorter loan term to reduce risk for the lender.")
-
-    if suggestions:
-        for suggestion in suggestions:
-            st.write(f"- {suggestion}")
-    else:
-        st.write("No specific suggestions at this time. Ensure your details are accurate and meet the requirements.")
   
 def predict():
     col= np.array([Gender,Married,Dependents,Education,Self_Employed,
