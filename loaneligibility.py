@@ -2,8 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import joblib
-import shap
-import matplotlib.pyplot as plt
 
 model= joblib.load('lr_model.joblib')
 
@@ -37,17 +35,6 @@ def predict():
         st.success('🎉 Congratulations! You can get the loan. :thumbsup:')
     else:
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
-
-explainer = shap.Explainer(model, data) 
-shap_values = explainer(data)
-
-st.subheader("Key Factors Contributing to the Decision")
-st.write("Below is a SHAP explanation of the factors influencing your loan eligibility decision:")
-
-fig, ax = plt.subplots()
-shap.plots.waterfall(shap_values[0], show = False)
-plt.tight_layout()
-st.pyplot(fig)
 
 m = st.markdown("""
 <style>
