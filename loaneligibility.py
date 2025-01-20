@@ -70,5 +70,45 @@ def predict():
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
         suggest_improvements(data)
 
+# Feature Importance Visualization
+def plot_feature_importance():
+    st.subheader("Feature Importance Visualization")
+    st.write("The chart below shows the overall importance of each feature in determining loan eligibility:")
+    
+    # Extract feature importances (ensure your model supports this)
+    try:
+        feature_importance = model.feature_importances_  # Replace with appropriate attribute if different
+        importance_df = pd.DataFrame({
+            'Feature': columns,
+            'Importance': feature_importance
+        }).sort_values(by='Importance', ascending=False)
+        
+        # Plot feature importance
+        fig, ax = plt.subplots()
+        ax.barh(importance_df['Feature'], importance_df['Importance'], color='skyblue')
+        ax.set_xlabel('Importance Score')
+        ax.set_ylabel('Features')
+        ax.set_title('Feature Importance')
+        plt.tight_layout()
+        st.pyplot(fig)
+    except AttributeError:
+        st.error("Feature importance is not available for this model.")
+
+# Style the Predict button
+m = st.markdown("""
+<style>
+div.stButton > button:first-child {
+    background-color: #0099ff;
+    color:#ffffff;
+}
+div.stButton > button:hover {
+    background-color: #00ff00;
+    color:#ff0000;
+}
+</style>""", unsafe_allow_html=True)
+
 # Prediction button
 st.button('Predict', on_click=predict)
+
+# Display feature importance visualization
+plot_feature_importance()
