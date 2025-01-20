@@ -70,19 +70,28 @@ def predict():
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
         suggest_improvements(data)
 
-# SHAP Explanation
-    explainer = shap.Explainer(model)  # Create the SHAP explainer
-    shap_values = explainer(pd.DataFrame(columns=columns))  # Calculate SHAP values for the input
-    shap.summary_plot(shap_values, features=pd.DataFrame(columns=columns))
+         # Provide suggestions for improvement
+        st.subheader("💡 Suggestions for Improvement")
+        
+        # Analyze inputs and give suggestions
+        suggestions = []
+        
+        if Credit_History == 0:
+            suggestions.append("Improve your credit history by paying off debts or building a good repayment record.")
+        if LoanAmount > ApplicantIncome * 0.4:
+            suggestions.append("Consider reducing the loan amount or increasing your income.")
+        if ApplicantIncome + CoapplicantIncome < 5000:
+            suggestions.append("Increase your total income (e.g., by including a co-applicant with a stable income).")
+        if Education == 'Not Graduate':
+            suggestions.append("Education status affects approval rates. If possible, consider further education.")
+        if Dependents in ['2', '3 or More Dependents']:
+            suggestions.append("Having fewer dependents reduces financial risk and increases approval chances.")
 
-    st.subheader("Key Factors Contributing to the Decision")
-    st.write("Below is a SHAP explanation of the factors influencing your loan eligibility decision:")
-
-    # Visualize SHAP values using a waterfall plot
-    fig, ax = plt.subplots()
-    shap.plots.waterfall(shap_values[0], show=False)  # For single prediction
-    plt.tight_layout()
-    st.pyplot(fig)
+        if suggestions:
+            for suggestion in suggestions:
+                st.write(f"- {suggestion}")
+        else:
+            st.write("No specific suggestions. Review your inputs or consult a loan officer for personalized advice.")
 
 # Feature Importance Visualization
 def plot_feature_importance():
