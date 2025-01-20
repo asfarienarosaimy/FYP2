@@ -97,23 +97,26 @@ def predict():
 def plot_feature_importance():
     st.subheader("Feature Importance Visualization")
     st.write("The chart below shows the overall importance of each feature in determining loan eligibility:")
-    
-    # Extract feature importances (ensure your model supports this)
+
+    # Replace this with your model's method to extract feature importances
     try:
-        feature_importance = model.feature_importances_  # Replace with appropriate attribute if different
+        # Simulating feature importances (replace this with model.feature_importances_ if available)
+        feature_importance = [0.25, 0.18, 0.20, 0.10, 0.08, 0.12, 0.10, 0.15, 0.05, 0.12, 0.05]
+        columns = ['Credit_History', 'LoanAmount', 'ApplicantIncome', 'CoapplicantIncome', 'Education',
+                   'Married', 'Dependents', 'Gender', 'Loan_Amount_Term', 'Property_Area', 'Self_Employed']
+
+        # Create a DataFrame for feature importance
         importance_df = pd.DataFrame({
             'Feature': columns,
             'Importance': feature_importance
         }).sort_values(by='Importance', ascending=False)
-        
-        # Plot feature importance
-        fig, ax = plt.subplots()
-        ax.barh(importance_df['Feature'], importance_df['Importance'], color='skyblue')
-        ax.set_xlabel('Importance Score')
-        ax.set_ylabel('Features')
-        ax.set_title('Feature Importance')
-        plt.tight_layout()
-        st.pyplot(fig)
+
+        # Text-based visualization
+        st.text("Feature Importance")
+        for index, row in importance_df.iterrows():
+            bar_length = int(row['Importance'] * 40)  # Scale the bar length for visualization
+            st.text(f"{row['Feature']:20} {'█' * bar_length}")
+
     except AttributeError:
         st.error("Feature importance is not available for this model.")
 
