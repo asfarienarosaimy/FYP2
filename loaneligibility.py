@@ -71,8 +71,9 @@ def predict():
         suggest_improvements(data)
 
 # SHAP Explanation
-    explainer = shap.Explainer(model, data)  # Create the SHAP explainer
-    shap_values = explainer(data)  # Calculate SHAP values for the input
+    explainer = shap.Explainer(model)  # Create the SHAP explainer
+    shap_values = explainer(pd.DataFrame(columns=columns))  # Calculate SHAP values for the input
+    shap.summary_plot(shap_values, features=pd.DataFrame(columns=columns))
 
     st.subheader("Key Factors Contributing to the Decision")
     st.write("Below is a SHAP explanation of the factors influencing your loan eligibility decision:")
