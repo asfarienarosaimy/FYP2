@@ -70,6 +70,19 @@ def predict():
         st.error('❌ Sorry, you cannot get the loan. :thumbsdown:')
         suggest_improvements(data)
 
+# SHAP Explanation
+    explainer = shap.Explainer(model, data)  # Create the SHAP explainer
+    shap_values = explainer(data)  # Calculate SHAP values for the input
+
+    st.subheader("Key Factors Contributing to the Decision")
+    st.write("Below is a SHAP explanation of the factors influencing your loan eligibility decision:")
+
+    # Visualize SHAP values using a waterfall plot
+    fig, ax = plt.subplots()
+    shap.plots.waterfall(shap_values[0], show=False)  # For single prediction
+    plt.tight_layout()
+    st.pyplot(fig)
+
 # Feature Importance Visualization
 def plot_feature_importance():
     st.subheader("Feature Importance Visualization")
