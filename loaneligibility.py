@@ -155,8 +155,8 @@ def plot_feature_importance():
             'Self_Employed': "Being self-employed can influence eligibility due to income variability, with self-employed individuals often seen as riskier borrowers due to unstable income."
         }
 
-        for feature in importance_df['Feature']:
-            st.write(f"**{feature}:** {explanations.get(feature, 'No explanation available.')}")
+       except AttributeError:
+        st.error("Feature importance is not available for this model.")
 
 # Style the Predict button
 st.markdown("""
