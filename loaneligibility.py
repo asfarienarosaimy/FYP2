@@ -23,7 +23,7 @@ def add_background_image(image_path):
     st.markdown(background_style, unsafe_allow_html=True)
 
 # Add your background image here
-add_background_image("image.png") 
+add_background_image("loan background.jpg") 
 
 # Load the trained model
 model = joblib.load('lr_model.joblib')
