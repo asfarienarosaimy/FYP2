@@ -38,8 +38,7 @@ columns = [
 
 # Home Page
 if page == "Home":
-    # Home Page
-if page == "Home":
+    
     st.title("Loan Eligibility System")
     st.markdown("Welcome to the Loan Eligibility Prediction App. Use the sidebar to navigate to different sections.")
 
