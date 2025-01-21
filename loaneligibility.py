@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 st.markdown("""
     <style>
         .stApp {
-            background-image: url("your_image_path_or_url");  # Replace with your image path or URL
+            background-image: url("loan background.jpg");  # Replace with your image path or URL
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
