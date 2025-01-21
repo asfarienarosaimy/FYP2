@@ -41,8 +41,17 @@ if page == "Home":
     st.title("Loan Eligibility System")
     st.markdown("Welcome to the Loan Eligibility Prediction App. Use the sidebar to navigate to different sections.")
 
-    # Display the image under the title
-    st.image("images 2.webp", caption="Loan Application System", width=400)
+    # Center the image using HTML and CSS
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <img src="images 2.webp" alt="Loan Application System" style="width: 1000px;">
+            <p><i>Loan Application System</i></p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     
 # Prediction Page
 elif page == "Prediction":
