@@ -139,7 +139,7 @@ def plot_feature_importance():
         st.text("Feature Importance")
         for index, row in importance_df.iterrows():
             bar_length = int(row['Importance'] * 2)  # Scale the bar length for visualization
-            st.text(f"{row['Feature']:20} {'█' * bar_length}{row['Importance']:.2f%")
+            st.text(f"{row['Feature']:20} {'█' * bar_length}{row['Importance']:.2f}%")
 
     except AttributeError:
         st.error("Feature importance is not available for this model.")
