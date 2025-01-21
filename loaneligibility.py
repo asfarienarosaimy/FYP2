@@ -5,6 +5,18 @@ import joblib
 import shap
 import matplotlib.pyplot as plt
 
+# Add custom background image using CSS
+st.markdown("""
+    <style>
+        .stApp {
+            background-image: url("your_image_path_or_url");  # Replace with your image path or URL
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Load the trained model
 model = joblib.load('lr_model.joblib')
 
