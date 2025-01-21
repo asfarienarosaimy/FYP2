@@ -41,6 +41,9 @@ if page == "Home":
     st.title("Loan Eligibility System")
     st.markdown("Welcome to the Loan Eligibility Prediction App. Use the sidebar to navigate to different sections.")
 
+    # Display the image under the title
+    st.image("images 1.png", caption="Loan Application System", use_column_width=True)
+
 # Prediction Page
 elif page == "Prediction":
     st.title("Loan Eligibility Prediction :bank:")
