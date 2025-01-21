@@ -158,6 +158,9 @@ def plot_feature_importance():
         for feature in importance_df['Feature']:
             st.write(f"**{feature}:** {explanations.get(feature, 'No explanation available.')}")
 
+except Exception as e:
+    st.error(f"An error occurred while plotting feature importance: {e}")
+
 # Style the Predict button
 st.markdown("""
 <style>
