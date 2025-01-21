@@ -138,7 +138,7 @@ def plot_feature_importance():
         # Text-based visualization with percentages
         st.text("Feature Importance")
         for index, row in importance_df.iterrows():
-            bar_length = int(row['Importance'] / 2)  # Scale the bar length for visualization
+            bar_length = int(row['Importance'] * 2)  # Scale the bar length for visualization
             st.text(f"{row['Feature']:20} {'█' * bar_length}{row['Importance']:.2f%")
 
     except AttributeError:
