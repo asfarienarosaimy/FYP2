@@ -138,28 +138,8 @@ def plot_feature_importance():
             percentage = f"{row['Importance'] * 100:.0f}%" # Calculate percentage
             st.text(f"{row['Feature']:20} {'█' * bar_length} {percentage}")
 
-        # Now provide a detailed explanation for each feature's importance
-        st.subheader("Explanation of Feature Importance")
-    
-        explanations = {
-            'Credit_History': "Credit history is the most important factor in loan eligibility because it directly reflects the applicant's past financial behavior, such as timely repayments or defaults.",
-            'LoanAmount': "The loan amount is important because it directly influences the financial risk to the lender. Larger loan amounts may require stricter eligibility checks.",
-            'ApplicantIncome': "Applicant income indicates the applicant's ability to repay the loan. Higher incomes suggest better repayment capacity.",
-            'CoapplicantIncome': "The income of a coapplicant boosts the overall income, making the loan application stronger, especially in cases where the applicant’s income alone may not be sufficient.",
-            'Education': "Education status can affect the applicant's earning potential. Graduates are more likely to have stable and higher-paying jobs.",
-            'Married': "Marital status can be an indicator of financial stability. Married applicants may have a more stable financial environment.",
-            'Dependents': "The number of dependents can influence the loan eligibility, as more dependents might suggest more financial responsibilities.",
-            'Gender': "Gender may have an impact, though typically less influential in modern models, it can correlate with societal patterns in loan approval.",
-            'Loan_Amount_Term': "The length of the loan term impacts the repayment schedule. Longer terms might reduce monthly payments but increase the overall risk for the lender.",
-            'Property_Area': "The area of the property can indicate the risk of the loan. Urban areas typically have higher property values, making them less risky for lenders.",
-            'Self_Employed': "Being self-employed can influence eligibility due to income variability, with self-employed individuals often seen as riskier borrowers due to unstable income."
-        }
-
-        for feature in importance_df['Feature']:
-            st.write(f"**{feature}:** {explanations.get(feature, 'No explanation available.')}")
-
-except Exception as e:
-    st.error(f"An error occurred while plotting feature importance: {e}")
+    except AttributeError:
+        st.error("Feature importance is not available for this model.")
 
 # Style the Predict button
 st.markdown("""
