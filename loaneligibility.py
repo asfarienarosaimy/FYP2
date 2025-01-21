@@ -125,21 +125,18 @@ def plot_feature_importance():
         columns = ['Credit_History', 'LoanAmount', 'ApplicantIncome', 'CoapplicantIncome', 'Education',
                    'Married', 'Dependents', 'Gender', 'Loan_Amount_Term', 'Property_Area', 'Self_Employed']
 
-        # Normalize importance to percentages
-        total_importance = sum(feature_importance)
-        feature_importance_percentage = [(imp / total_importance) * 100 for imp in feature_importance]
-
         # Create a DataFrame for feature importance
         importance_df = pd.DataFrame({
             'Feature': columns,
             'Importance': feature_importance
         }).sort_values(by='Importance', ascending=False)
 
-        # Text-based visualization with percentages
+        # Text-based visualization 
         st.text("Feature Importance")
         for index, row in importance_df.iterrows():
-            bar_length = int(row['Importance'] * 2)  # Scale the bar length for visualization
-            st.text(f"{row['Feature']:20} {'█' * bar_length}{row['Importance']:.2f}%")
+            bar_length = int(row['Importance'] * 40)  # Scale the bar length for visualization
+            percentage = f"{row['Importance'] * 100:.0f}%" # Calculate percentage
+            st.text(f"{row['Feature']:20} {'█' * bar_length} {percenatge}")
 
     except AttributeError:
         st.error("Feature importance is not available for this model.")
