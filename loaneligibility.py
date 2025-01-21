@@ -57,12 +57,12 @@ elif page == "Prediction":
     Dependents = st.selectbox('Number Of Dependents', ('0', '1', '2', '3 or More Dependents'))
     Education = st.selectbox('Education status', ('Graduate', 'Not Graduate'))
     Self_Employed = st.selectbox('Self Employed', ('No', 'Yes'))
-    ApplicantIncome = st.number_input('Applicant Income (RM) (1 year = 12 months)', 0)
-    CoapplicantIncome = st.number_input('Coapplicant Income (RM) (1 year = 12 months)', 0)
-    LoanAmount = st.number_input('Loan Amount (RM) (5 year = 60 months, 10 year = 120 months)', 0)
+    ApplicantIncome = st.number_input('Applicant Income (RM) (per month)', 0)
+    CoapplicantIncome = st.number_input('Coapplicant Income (RM) (per month)', 0)
+    LoanAmount = st.number_input('Loan Amount (RM) (to applied)', 0)
     Loan_Amount_Term = st.select_slider(
         'Loan Amount Term',
-        ['1 YEAR', '3 YEARS', '5 YEARS', '7 YEARS', '10 YEARS', '15 YEARS', '20 YEARS', '25 YEARS', '30 YEARS', '40 YEARS']
+        ['1 YEAR', '3 YEARS', '5 YEARS', '7 YEARS', '9 YEARS', '11 YEARS', '13 YEARS', '15 YEARS', '17 YEARS', '19 YEARS', '21 YEARS', '23 YEARS', '25 YEARS', '27 YEARS', '29 YEARS', '31 YEARS', '33 YEARS', '35 YEARS', '37 YEARS', '40 YEARS']
     )
     Credit_History = st.select_slider('Credit History 1 for Good 0 for Bad', [0, 1])
     Property_Area = st.selectbox('Area of Property', ('Urban', 'Rural', 'Semiurban'))
