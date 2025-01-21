@@ -38,8 +38,19 @@ columns = [
 
 # Home Page
 if page == "Home":
-    st.title("Loan Eligibility System")
-    st.markdown("Welcome to the Loan Eligibility Prediction App. Use the sidebar to navigate to different sections.")
+    # Create a layout with centered content
+    col1, col2, col3 = st.columns([1, 2, 1])  # Center the content using columns
+
+    with col2:  # Place content in the center column
+        st.title("Loan Eligibility System")
+        st.markdown(
+            """
+            <p style="text-align: center;">
+                Welcome to the Loan Eligibility Prediction App. Use the sidebar to navigate to different sections.
+            </p>
+            """, 
+            unsafe_allow_html=True
+        )
 
    # Display the centered image with a caption
     col1, col2, col3 = st.columns([1, 2, 1])  # Create 3 columns, center column is wider
