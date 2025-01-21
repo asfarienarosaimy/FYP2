@@ -159,7 +159,7 @@ def plot_feature_importance():
             st.write(f"**{feature}:** {explanations.get(feature, 'No explanation available.')}")
 
 # Style the Predict button
-m = st.markdown("""
+st.markdown("""
 <style>
 div.stButton > button:first-child {
     background-color: #0099ff;
