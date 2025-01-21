@@ -136,7 +136,7 @@ def plot_feature_importance():
         for index, row in importance_df.iterrows():
             bar_length = int(row['Importance'] * 40)  # Scale the bar length for visualization
             percentage = f"{row['Importance'] * 100:.0f}%" # Calculate percentage
-            st.text(f"{row['Feature']:20} {'█' * bar_length} {percenatge}")
+            st.text(f"{row['Feature']:20} {'█' * bar_length} {percentage}")
 
     except AttributeError:
         st.error("Feature importance is not available for this model.")
