@@ -64,7 +64,7 @@ elif page == "Prediction":
         'Loan Amount Term',
         ['1 YEAR', '3 YEARS', '5 YEARS', '7 YEARS', '9 YEARS', '11 YEARS', '13 YEARS', '15 YEARS', '17 YEARS', '19 YEARS', '21 YEARS', '23 YEARS', '25 YEARS', '27 YEARS', '29 YEARS', '31 YEARS', '33 YEARS', '35 YEARS', '37 YEARS', '40 YEARS']
     )
-    Credit_History = st.select_slider('Credit History 1 for Good 0 for Bad', [0, 1])
+    Credit_History = st.selectbox(''Credit_History', ('0', '1'))
     Property_Area = st.selectbox('Area of Property', ('Urban', 'Rural', 'Semiurban'))
 
     # Function for prediction
