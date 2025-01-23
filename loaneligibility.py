@@ -27,13 +27,13 @@ add_background_image("loan background.jpg")
 model = joblib.load('lr_model.joblib')
 
 # Sidebar for navigation
-page = st.sidebar.radio("Navigate to", ["Home", "Prediction", "Suggestions"], key = "main_navigation")
+page = st.sidebar.radio("Navigate to", ["Home", "Prediction", "Suggestions"], key="main_navigation")
 
 # Initialize session state variables
 if "loan_result" not in st.session_state:
-    st.session_state.loan_result = None # Initialize loan result
+    st.session_state.loan_result = None  # Initialize loan result
 if "input_data" not in st.session_state:
-    st.session_state.input_data = None # Store user input for suggestions
+    st.session_state.input_data = None  # Store user input for suggestions
 
 # Columns for the data
 columns = [
@@ -44,11 +44,10 @@ columns = [
 
 # Home Page
 if page == "Home":
-    
     st.title("Loan Eligibility System")
     st.markdown("Welcome to the Loan Eligibility Prediction App. Use the sidebar to navigate to different sections.")
 
-   # Display the centered image with a caption
+    # Display the centered image with a caption
     col1, col2, col3 = st.columns([1, 2, 1])  # Create 3 columns, center column is wider
     with col2:  # Place the image and caption in the center column
         st.image("images 2.webp", caption="Loan Application System", width=400)
@@ -65,12 +64,12 @@ elif page == "Prediction":
     Self_Employed = st.selectbox('Self Employed', ('No', 'Yes'))
     ApplicantIncome = st.number_input('Applicant Income (RM) (per month)', 0)
     CoapplicantIncome = st.number_input('Coapplicant Income (RM) (per month)', 0)
-    LoanAmount = st.number_input('Loan Amount (RM) (to applied)', 0)
+    LoanAmount = st.number_input('Loan Amount (RM) (to apply)', 0)
     Loan_Amount_Term = st.select_slider(
         'Loan Amount Term',
         ['1 YEAR', '3 YEARS', '5 YEARS', '7 YEARS', '9 YEARS', '11 YEARS', '13 YEARS', '15 YEARS', '17 YEARS', '19 YEARS', '21 YEARS', '23 YEARS', '25 YEARS', '27 YEARS', '29 YEARS', '31 YEARS', '33 YEARS', '35 YEARS', '37 YEARS', '40 YEARS']
     )
-    Credit_History = st.selectbox('Credit_History (1 for Good 0 for Bad)', ('0', '1'))
+    Credit_History = st.selectbox('Credit History (1 for Good, 0 for Bad)', ('0', '1'))
     Property_Area = st.selectbox('Area of Property', ('Urban', 'Rural', 'Semiurban'))
 
     # Function for prediction
@@ -136,4 +135,3 @@ elif page == "Suggestions":
         suggest_improvements(st.session_state.input_data)
     else:
         st.info("⚠️ No data available. Please predict your loan eligibility on the Prediction Page.")
-
