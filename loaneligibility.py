@@ -47,6 +47,15 @@ if page == "Home":
     with col2:  # Place the image and caption in the center column
         st.image("images 2.webp", caption="Loan Application System", width=400)
 
+# Sidebar for navigation
+page = st.sidebar.radio("Navigate to", ["Home", "Prediction", "Suggestions"])
+
+# Store prediction result globally
+if "loan_result" not in st.session_state:
+    st.session_state.loan_result = None  # Initialize the loan result
+if "input_data" not in st.session_state:
+    st.session_state.input_data = None  # Store user input for suggestions
+
 # Prediction Page
 elif page == "Prediction":
     st.title("Loan Eligibility Prediction :bank:")
@@ -88,41 +97,41 @@ elif page == "Prediction":
 
 # Suggestions Page
 elif page == "Suggestions":
-    st.title("Suggestions for Improvement")
+    st.title("Suggestions and Approval Feedback")
 
-    # Function to generate suggestions for improvement
+    # Function to generate suggestions or reasons for approval
     def suggest_improvements(data):
-        suggestions = []
-        if data['Credit_History'][0] == 0:
-            suggestions.append("Maintain a good credit history to improve your chances.")
-        if float(data['ApplicantIncome'][0]) < 5000:
-            suggestions.append("Consider increasing your income to meet eligibility requirements.")
-        if float(data['LoanAmount'][0]) > 500000:
-            suggestions.append("Reduce the requested loan amount to increase approval likelihood.")
-        if data['Property_Area'][0] == 'Rural':
-            suggestions.append("Consider applying for a loan in urban or semiurban areas for better options.")
-        if data['Education'][0] == 'Not Graduate':
-            suggestions.append("Further education may enhance your eligibility for loans.")
-
-        if suggestions:
-            for suggestion in suggestions:
-                st.write(f"• {suggestion}")
+        if st.session_state.loan_result == 1:
+            # Loan approved: provide reasons for approval
+            st.subheader("🎉 Reasons for Loan Approval:")
+            if data['Credit_History'][0] == 1:
+                st.write("• Good credit history maintained.")
+            if float(data['ApplicantIncome'][0]) >= 5000:
+                st.write("• Applicant's income meets the required threshold.")
+            if float(data['LoanAmount'][0]) <= 500000:
+                st.write("• Loan amount is within the acceptable range.")
+            if data['Property_Area'][0] in ['Urban', 'Semiurban']:
+                st.write(f"• Property area ({data['Property_Area'][0]}) qualifies for better loan options.")
+            if data['Education'][0] == 'Graduate':
+                st.write("• Applicant's educational background enhances eligibility.")
+        elif st.session_state.loan_result == 0:
+            # Loan not approved: provide suggestions for improvement
+            st.subheader("❌ Suggestions for Improvement:")
+            if data['Credit_History'][0] == 0:
+                st.write("• Maintain a good credit history to improve your chances.")
+            if float(data['ApplicantIncome'][0]) < 5000:
+                st.write("• Consider increasing your income to meet eligibility requirements.")
+            if float(data['LoanAmount'][0]) > 500000:
+                st.write("• Reduce the requested loan amount to increase approval likelihood.")
+            if data['Property_Area'][0] == 'Rural':
+                st.write("• Consider applying for a loan in urban or semiurban areas for better options.")
+            if data['Education'][0] == 'Not Graduate':
+                st.write("• Further education may enhance your eligibility for loans.")
         else:
-            st.write("Your application looks strong, no specific suggestions for improvement.")
+            st.write("⚠️ Please make a prediction on the Prediction Page first.")
 
-    # Example data to simulate improvement suggestions
-    example_data = pd.DataFrame([{
-        'Gender': 'Male',
-        'Married': 'No',
-        'Dependents': '0',
-        'Education': 'Not Graduate',
-        'Self_Employed': 'No',
-        'ApplicantIncome': 3000,
-        'CoapplicantIncome': 0,
-        'LoanAmount': 600000,
-        'Loan_Amount_Term': '5 YEARS',
-        'Credit_History': 0,
-        'Property_Area': 'Rural'
-    }])
-
-    suggest_improvements(example_data)
+    # Display suggestions based on stored data
+    if st.session_state.input_data is not None:
+        suggest_improvements(st.session_state.input_data)
+    else:
+        st.write("⚠️ No data available. Please predict your loan eligibility on the Prediction Page.")
