@@ -141,3 +141,44 @@ elif page == "Prediction":
     # Button for prediction
     if st.button('Predict'):
         predict()
+
+# Suggestions Page
+elif page == "Suggestions":
+    st.title("Suggestions and Approval Feedback")
+
+    # Function to generate suggestions or reasons for approval
+    def suggest_improvements(data):
+        if st.session_state.loan_result == 1:
+            # Loan approved: provide reasons for approval
+            st.subheader("🎉 Reasons for Loan Approval:")
+            if data['Credit_History'][0] == 1:
+                st.write("• Good credit history maintained.")
+            if float(data['ApplicantIncome'][0]) >= 5000:
+                st.write("• Applicant's income meets the required threshold.")
+            if float(data['LoanAmount'][0]) <= 500000:
+                st.write("• Loan amount is within the acceptable range.")
+            if data['Property_Area'][0] in ['Urban', 'Semiurban']:
+                st.write(f"• Property area ({data['Property_Area'][0]}) qualifies for better loan options.")
+            if data['Education'][0] == 'Graduate':
+                st.write("• Applicant's educational background enhances eligibility.")
+        elif st.session_state.loan_result == 0:
+            # Loan not approved: provide suggestions for improvement
+            st.subheader("❌ Suggestions for Improvement:")
+            if data['Credit_History'][0] == 0:
+                st.write("• Maintain a good credit history to improve your chances.")
+            if float(data['ApplicantIncome'][0]) < 5000:
+                st.write("• Consider increasing your income to meet eligibility requirements.")
+            if float(data['LoanAmount'][0]) > 500000:
+                st.write("• Reduce the requested loan amount to increase approval likelihood.")
+            if data['Property_Area'][0] == 'Rural':
+                st.write("• Consider applying for a loan in urban or semiurban areas for better options.")
+            if data['Education'][0] == 'Not Graduate':
+                st.write("• Further education may enhance your eligibility for loans.")
+        else:
+            st.write("⚠️ Please make a prediction on the Prediction Page first.")
+
+    # Display suggestions based on stored data
+    if st.session_state.input_data is not None:
+        suggest_improvements(st.session_state.input_data)
+    else:
+        st.info("⚠️ No data available. Please predict your loan eligibility on the Prediction Page.")
