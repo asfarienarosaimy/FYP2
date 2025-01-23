@@ -27,7 +27,7 @@ add_background_image("loan background.jpg")
 model = joblib.load('lr_model.joblib')
 
 # Sidebar for navigation
-page = st.sidebar.radio("Navigate to", ["Home", "Prediction", "Suggestions"], key="main_navigation")
+page = st.sidebar.radio("Navigate to", ["Home", "Information", "Prediction", "Suggestions"], key="main_navigation")
 
 # Initialize session state variables
 if "loan_result" not in st.session_state:
