@@ -83,6 +83,10 @@ elif page == "Prediction":
         data = pd.DataFrame([col], columns=columns)
         prediction = model.predict(data)[0]
 
+        # Store prediction result and input data in session state
+        st.session_state.loan_result = prediction
+        st.session_state.input_data = data
+
         if prediction == 1:
             st.success('🎉 Congratulations! You can get the loan. :thumbsup:')
         else:
