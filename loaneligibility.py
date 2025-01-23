@@ -38,10 +38,11 @@ columns = [
 
 # Home Page
 if page == "Home":
+    
     st.title("Loan Eligibility System")
     st.markdown("Welcome to the Loan Eligibility Prediction App. Use the sidebar to navigate to different sections.")
 
-    # Display the centered image with a caption
+   # Display the centered image with a caption
     col1, col2, col3 = st.columns([1, 2, 1])  # Create 3 columns, center column is wider
     with col2:  # Place the image and caption in the center column
         st.image("images 2.webp", caption="Loan Application System", width=400)
@@ -87,70 +88,41 @@ elif page == "Prediction":
 
 # Suggestions Page
 elif page == "Suggestions":
-    st.title("Suggestions and Approval Feedback")
+    st.title("Suggestions for Improvement")
 
-    # Function to generate suggestions or reasons for approval
+    # Function to generate suggestions for improvement
     def suggest_improvements(data):
         suggestions = []
-        reasons = []
-        
-        # Criteria for approval
-        if data['Credit_History'][0] == 1:
-            reasons.append("Good credit history maintained.")
-        else:
+        if data['Credit_History'][0] == 0:
             suggestions.append("Maintain a good credit history to improve your chances.")
-        
-        if float(data['ApplicantIncome'][0]) >= 5000:
-            reasons.append("Applicant's income meets the required threshold.")
-        else:
+        if float(data['ApplicantIncome'][0]) < 5000:
             suggestions.append("Consider increasing your income to meet eligibility requirements.")
-        
-        if float(data['LoanAmount'][0]) <= 500000:
-            reasons.append("Loan amount is within the acceptable range.")
-        else:
+        if float(data['LoanAmount'][0]) > 500000:
             suggestions.append("Reduce the requested loan amount to increase approval likelihood.")
-        
-        if data['Property_Area'][0] in ['Urban', 'Semiurban']:
-            reasons.append(f"Property area ({data['Property_Area'][0]}) qualifies for better loan options.")
-        else:
+        if data['Property_Area'][0] == 'Rural':
             suggestions.append("Consider applying for a loan in urban or semiurban areas for better options.")
-        
-        if data['Education'][0] == 'Graduate':
-            reasons.append("Applicant's educational background enhances eligibility.")
-        else:
+        if data['Education'][0] == 'Not Graduate':
             suggestions.append("Further education may enhance your eligibility for loans.")
-        
-        # Display feedback based on the user's application data
-        if reasons and not suggestions:
-            st.subheader("Reasons for Loan Approval:")
-            for reason in reasons:
-                st.write(f"• {reason}")
-        elif suggestions and not reasons:
-            st.subheader("Suggestions for Improvement:")
+
+        if suggestions:
             for suggestion in suggestions:
                 st.write(f"• {suggestion}")
         else:
-            st.subheader("Mixed Feedback:")
-            st.write("**Reasons for Approval:**")
-            for reason in reasons:
-                st.write(f"• {reason}")
-            st.write("**Suggestions for Improvement:**")
-            for suggestion in suggestions:
-                st.write(f"• {suggestion}")
+            st.write("Your application looks strong, no specific suggestions for improvement.")
 
-    # Simulating data from the user's input for the suggestions page
+    # Example data to simulate improvement suggestions
     example_data = pd.DataFrame([{
         'Gender': 'Male',
         'Married': 'No',
         'Dependents': '0',
-        'Education': 'Graduate',  # Modify this field to test approval logic
+        'Education': 'Not Graduate',
         'Self_Employed': 'No',
-        'ApplicantIncome': 6000,  # Modify this field to test approval logic
+        'ApplicantIncome': 3000,
         'CoapplicantIncome': 0,
-        'LoanAmount': 400000,  # Modify this field to test approval logic
+        'LoanAmount': 600000,
         'Loan_Amount_Term': '5 YEARS',
-        'Credit_History': 1,  # Modify this field to test approval logic
-        'Property_Area': 'Urban'  # Modify this field to test approval logic
+        'Credit_History': 0,
+        'Property_Area': 'Rural'
     }])
 
     suggest_improvements(example_data)
