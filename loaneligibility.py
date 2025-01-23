@@ -131,4 +131,5 @@ elif page == "Suggestions":
     if st.session_state.input_data is not None:
         suggest_improvements(st.session_state.input_data)
     else:
-        st.write("⚠️ No data available. Please predict your loan eligibility on the Prediction Page.")
+        st.info("⚠️ No data available. Please predict your loan eligibility on the Prediction Page.")
+
