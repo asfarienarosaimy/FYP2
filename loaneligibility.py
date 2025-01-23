@@ -27,7 +27,13 @@ add_background_image("loan background.jpg")
 model = joblib.load('lr_model.joblib')
 
 # Sidebar for navigation
-page = st.sidebar.radio("Navigate to", ["Home", "Prediction", "Suggestions"])
+page = st.sidebar.radio("Navigate to", ["Home", "Prediction", "Suggestions"], key = "main_navigation")
+
+# Initialize session state variables
+if "loan_result" not in st.session_state:
+    st.session_state.loan_result = None # Initialize loan result
+if "input_data" not in st.session_state:
+    st.session_state.input_data = None # Store user input for suggestions
 
 # Columns for the data
 columns = [
@@ -46,15 +52,6 @@ if page == "Home":
     col1, col2, col3 = st.columns([1, 2, 1])  # Create 3 columns, center column is wider
     with col2:  # Place the image and caption in the center column
         st.image("images 2.webp", caption="Loan Application System", width=400)
-
-# Sidebar for navigation
-page = st.sidebar.radio("Navigate to", ["Home", "Prediction", "Suggestions"])
-
-# Store prediction result globally
-if "loan_result" not in st.session_state:
-    st.session_state.loan_result = None  # Initialize the loan result
-if "input_data" not in st.session_state:
-    st.session_state.input_data = None  # Store user input for suggestions
 
 # Prediction Page
 elif page == "Prediction":
